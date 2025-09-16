@@ -32,6 +32,12 @@ public class Driver {
 
         //Classroom Table
 
+        Relation classroom = new RelationBuilder()
+        .attributeNames(List.of("building", "room_number","capacity"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        classroom.loadData("src/uni_in_class_exports/classroom_export.csv");
+        classroom.print();
 
         //Course Table
 
