@@ -21,12 +21,12 @@ public class Driver {
         // After creating the table, data is loaded from a CSV file.
         // Path should be replaced with a correct file path for a compatible
         // CSV file.
-        Relation rel1 = new RelationBuilder()
-                .attributeNames(List.of("Col01_Name", "Col02_Name", "Col03_Name"))
-                .attributeTypes(List.of(Type.INTEGER, Type.STRING, Type.DOUBLE))
+        Relation advisor = new RelationBuilder()
+                .attributeNames(List.of("s_ID", "i_ID"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING))
                 .build();
-        rel1.loadData("/path/to/exported/csv_file");
-        rel1.print();
+        advisor.loadData("src\\uni_in_class_exports\\advisor_export.csv");
+        advisor.print();
     }
 
 }
