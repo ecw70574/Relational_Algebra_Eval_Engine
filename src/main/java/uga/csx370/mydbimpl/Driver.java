@@ -63,6 +63,17 @@ public class Driver {
         instructor.loadData("src\\uni_in_class_exports\\instructor_export.csv");
         instructor.print();
 
+<<<<<<< Updated upstream
+=======
+        //Instructor Table - priya
+        Relation instructor = new RelationBuilder()
+        .attributeNames(List.of("ID", "name","dept_name", "salary"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        instructor.loadData("src\\uni_in_class_exports\\instructor_export.csv");
+        instructor.print();
+
+>>>>>>> Stashed changes
         //Prereq Table - priya
         Relation prereq = new RelationBuilder()
         .attributeNames(List.of("course_id", "prereq_id"))
