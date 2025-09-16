@@ -27,7 +27,7 @@ public class Driver {
                 .attributeNames(List.of("s_ID", "i_ID"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
                 .build();
-        advisor.loadData("src\\uni_in_class_exports\\advisor_export.csv");
+        advisor.loadData("src/uni_in_class_exports/advisor_export.csv");
         advisor.print();
 
         //Classroom Table
@@ -40,10 +40,20 @@ public class Driver {
         classroom.print();
 
         //Course Table
-
+        Relation course = new RelationBuilder()
+        .attributeNames(List.of("course_id", "title","dept_name","credits"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
+                .build();
+        course.loadData("src/uni_in_class_exports/course_export.csv");
+        course.print();
 
         //Dept Table
-
+        Relation dept = new RelationBuilder()
+        .attributeNames(List.of("dept_name", "building","budget"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        dept.loadData("src/uni_in_class_exports/dept_export.csv");
+        dept.print();
 
         //Instructor Table
 
@@ -55,7 +65,12 @@ public class Driver {
 
 
         //Student Table
-
+        Relation student = new RelationBuilder()
+        .attributeNames(List.of("ID", "name","dept_name","tot_cred"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
+                .build();
+        student.loadData("src/uni_in_class_exports/student_export.csv");
+        student.print();
 
         //Takes Table
 
