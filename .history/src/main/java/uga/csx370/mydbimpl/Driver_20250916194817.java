@@ -27,7 +27,7 @@ public class Driver {
                 .attributeNames(List.of("s_ID", "i_ID"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
                 .build();
-        advisor.loadData("src/uni_in_class_exports/advisor_export.csv");
+        advisor.loadData("src\\uni_in_class_exports\\advisor_export.csv");
         advisor.print();
 
         //Classroom Table
@@ -40,52 +40,37 @@ public class Driver {
         classroom.print();
 
         //Course Table
-        Relation course = new RelationBuilder()
-        .attributeNames(List.of("course_id", "title","dept_name","credits"))
-                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
-                .build();
-        course.loadData("src/uni_in_class_exports/course_export.csv");
-        course.print();
+
 
         //Dept Table
-        Relation dept = new RelationBuilder()
-        .attributeNames(List.of("dept_name", "building","budget"))
-                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
-                .build();
-        dept.loadData("src/uni_in_class_exports/dept_export.csv");
-        dept.print();
+
 
         //Instructor Table - priya
         Relation instructor = new RelationBuilder()
         .attributeNames(List.of("ID", "name","dept_name", "salary"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
                 .build();
-        instructor.loadData("src\\uni_in_class_exports\\instructor_export.csv");
-        instructor.print();
+        classroom.loadData("src/uni_in_class_exports/instructor_export.csv");
+        classroom.print();
 
         //Prereq Table - priya
         Relation prereq = new RelationBuilder()
         .attributeNames(List.of("course_id", "prereq_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
                 .build();
-        prereq.loadData("src\\uni_in_class_exports\\prereq_export.csv");
-        prereq.print();
+        classroom.loadData("src/uni_in_class_exports/prereq_export.csv");
+        classroom.print();
 
         //Section Table - priya
         Relation section = new RelationBuilder()
-        .attributeNames(List.of("course_id", "sec_id","semester","year", "building","room_number", "time_slot_id"))
-                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING, Type.STRING, Type.STRING))
+        .attributeNames(List.of("course_id", "sec_id","semester","year", "sec_id","semester" ))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
                 .build();
-        section.loadData("src\\uni_in_class_exports\\section_export.csv");
-        section.print();
+        classroom.loadData("src/uni_in_class_exports/classroom_export.csv");
+        classroom.print();
 
         //Student Table
-        Relation student = new RelationBuilder()
-        .attributeNames(List.of("ID", "name","dept_name","tot_cred"))
-                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
-                .build();
-        student.loadData("src/uni_in_class_exports/student_export.csv");
-        student.print();
+
 
         //Takes Table
 
