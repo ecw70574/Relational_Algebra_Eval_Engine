@@ -21,12 +21,44 @@ public class Driver {
         // After creating the table, data is loaded from a CSV file.
         // Path should be replaced with a correct file path for a compatible
         // CSV file.
+
+        //Advisor Table
         Relation advisor = new RelationBuilder()
                 .attributeNames(List.of("s_ID", "i_ID"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
                 .build();
         advisor.loadData("src\\uni_in_class_exports\\advisor_export.csv");
         advisor.print();
+
+        //Classroom Table
+
+
+        //Course Table
+
+
+        //Dept Table
+
+
+        //Instructor Table
+
+
+        //Prereq Table
+
+
+        //Section Table
+
+
+        //Student Table
+
+
+        //Takes Table
+
+
+        //Teaches Table
+
+
+        //Time Slot Table
+
     }
 
 }
