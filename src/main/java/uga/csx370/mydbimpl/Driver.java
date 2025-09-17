@@ -23,7 +23,7 @@ public class Driver {
         // CSV file.
 
         //Advisor Table
-        System.out.println("This is the origional advisor Table");
+/*         System.out.println("This is the origional advisor Table");
         Relation advisor = new RelationBuilder()
                 .attributeNames(List.of("s_ID", "i_ID"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
@@ -75,7 +75,7 @@ public class Driver {
                 .build();
         prereq.loadData("src/uni_in_class_exports/prereq_export.csv");
         prereq.print();
-
+*/
         //Section Table - priya
 /*        System.out.println("This is the Original Section Table");
         Relation section = new RelationBuilder()
@@ -86,7 +86,7 @@ public class Driver {
         section.print();
 */        
         //Student Table
-        System.out.println("This is the Original Student Table");
+/*        System.out.println("This is the Original Student Table");
         Relation student = new RelationBuilder().attributeNames(List.of("ID", "name","dept_name","tot_cred"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
                 .build();
@@ -110,7 +110,7 @@ public class Driver {
                 .build();
         teaches.loadData("src/uni_in_class_exports/teaches_export.csv");
         teaches.print();
-
+*/
         //Time Slot Table - Amy
         System.out.println("This is the Original Time Slot Table");
         Relation Time_slot = new RelationBuilder()
@@ -120,6 +120,10 @@ public class Driver {
         Time_slot.loadData("src/uni_in_class_exports/time_slot_export.csv");
         Time_slot.print();
 
+        // Test Select Method: select(Relation rel, Predicate p)
+        RAImpl test_time_slot_A = new RAImpl();
+        Relation time_slot_A = test_time_slot_A.select(Time_slot, row -> row.get(0).getAsString().equals("A")); //List<Cell> row
+        time_slot_A.print();
     }
 
 }
