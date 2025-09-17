@@ -136,8 +136,7 @@ public class RAImpl implements RA {
         Relation result = new RelationBuilder()
             .attributeNames(rel1.getAttrs())   
             .attributeTypes(rel1.getTypes())   
-            .build();     
-
+            .build();      
             
         //3. going through every row in rel 1 - large outer loop
         for (int i = 0; i < rel1.getSize(); i++) {
@@ -154,7 +153,7 @@ public class RAImpl implements RA {
             }
 
             //if this specific row not same in both, don't implement code below
-            //no do step 5, go to the next iteration in outer loop - next row
+            //no step 5, go to the next iteration in outer loop - next row
             if (!existsInSecond) {
                 continue;
             }
@@ -175,7 +174,7 @@ public class RAImpl implements RA {
             }
         }
         //7: Return the result
-    return result;
+        return result;
 }
 
     @Override
@@ -217,20 +216,11 @@ public class RAImpl implements RA {
         if (row1.size() != row2.size()) { // if row sizes equal
             return false;
         } //if
-
-        /* 
         for(int i = 0; i < row1.size(); i++) { //iterate through the rows
             if(row1.get(i).getAsString().equals(row2.get(i).getAsString()) == false) {
                 return false; // values not same
             }
         }
-        */  //it compares everything via getAsString(), which can be wrong for numbers (e.g., 1 vs 1.0) and may even throw if a Cell isn’t a string.
-
-        for (int i = 0; i < row1.size(); i++) {
-            if (row1.get(i).equals(row2.get(i)) == false) { 
-            return false;
-        }
-    }
         return true; //equal
     } //rowEquals
 }

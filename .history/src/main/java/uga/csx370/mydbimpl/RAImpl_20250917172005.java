@@ -116,67 +116,28 @@ public class RAImpl implements RA {
 
     @Override
     public Relation intersect(Relation rel1, Relation rel2) {
-        //1. check compatibility. Same # of cols, attribute names same order, types same order
+        // TODO Auto-generated method stub
+        //1. Check compatibility. Same # of cols, attribute names, types in same order
+
         //check if number of cols same
         if (rel1.getAttrs().size() != rel2.getAttrs().size()) {
             throw new IllegalArgumentException("Relations are not compatible");
         }
-        //attribute names and types same order?
+
+        // Then: check names and types together, column by column
         for (int i = 0; i < rel1.getAttrs().size(); i++) {
-            String name1 = rel1.getAttrs().get(i);    //comparing attr1 vs attri2 col by col
+            String name1 = rel1.getAttrs().get(i);
             String name2 = rel2.getAttrs().get(i);
-            Type type1 = rel1.getTypes().get(i);      //comparing type1 vs type2 col by col
+            Type type1 = rel1.getTypes().get(i);
             Type type2 = rel2.getTypes().get(i);
 
             if (!name1.equals(name2) || type1 != type2) {
-                throw new IllegalArgumentException("Relations are not compatible.");
+                throw new IllegalArgumentException("Relations are not compatible: schemas do not match.");
             }
         }
-        //2. creating a empty table, same attributes/types as rel1
-        Relation result = new RelationBuilder()
-            .attributeNames(rel1.getAttrs())   
-            .attributeTypes(rel1.getTypes())   
-            .build();     
 
-            
-        //3. going through every row in rel 1 - large outer loop
-        for (int i = 0; i < rel1.getSize(); i++) {
-            List<Cell> r1 = rel1.getRow(i);   
 
-            //4. check if this specific row exists in rel2
-            boolean existsInSecond = false;
-            for (int j = 0; j < rel2.getSize(); j++) {
-                List<Cell> r2 = rel2.getRow(j);
-                if (rowEquals(r1, r2)) {
-                    existsInSecond = true;
-                    break; // stop - once we find a match
-                }
-            }
-
-            //if this specific row not same in both, don't implement code below
-            //no do step 5, go to the next iteration in outer loop - next row
-            if (!existsInSecond) {
-                continue;
-            }
-
-            //5. check for duplicates - is this row already in result table?
-            boolean alreadyAdded = false;
-            for (int k = 0; k < result.getSize(); k++) {
-                List<Cell> rowInResult = result.getRow(k);
-                if (rowEquals(r1, rowInResult)) {
-                    alreadyAdded = true;
-                    break;
-                }
-            }
-
-            //6. if not already present, insert row into result table
-            if (!alreadyAdded) {
-                result.insert(new ArrayList<>(r1)); // shallow copy of the row
-            }
-        }
-        //7: Return the result
-    return result;
-}
+    }
 
     @Override
     public Relation diff(Relation rel1, Relation rel2) {
@@ -217,20 +178,11 @@ public class RAImpl implements RA {
         if (row1.size() != row2.size()) { // if row sizes equal
             return false;
         } //if
-
-        /* 
         for(int i = 0; i < row1.size(); i++) { //iterate through the rows
             if(row1.get(i).getAsString().equals(row2.get(i).getAsString()) == false) {
                 return false; // values not same
             }
         }
-        */  //it compares everything via getAsString(), which can be wrong for numbers (e.g., 1 vs 1.0) and may even throw if a Cell isn’t a string.
-
-        for (int i = 0; i < row1.size(); i++) {
-            if (row1.get(i).equals(row2.get(i)) == false) { 
-            return false;
-        }
-    }
         return true; //equal
     } //rowEquals
 }

@@ -136,14 +136,13 @@ public class RAImpl implements RA {
         Relation result = new RelationBuilder()
             .attributeNames(rel1.getAttrs())   
             .attributeTypes(rel1.getTypes())   
-            .build();     
-
+            .build();      
             
         //3. going through every row in rel 1 - large outer loop
         for (int i = 0; i < rel1.getSize(); i++) {
             List<Cell> r1 = rel1.getRow(i);   
 
-            //4. check if this specific row exists in rel2
+            //4. check if row exists in rel2
             boolean existsInSecond = false;
             for (int j = 0; j < rel2.getSize(); j++) {
                 List<Cell> r2 = rel2.getRow(j);
@@ -153,13 +152,12 @@ public class RAImpl implements RA {
                 }
             }
 
-            //if this specific row not same in both, don't implement code below
-            //no do step 5, go to the next iteration in outer loop - next row
+            // If not found in rel2, skip this row
             if (!existsInSecond) {
                 continue;
             }
 
-            //5. check for duplicates - is this row already in result table?
+            // Step 5: Check if this row is already in the result
             boolean alreadyAdded = false;
             for (int k = 0; k < result.getSize(); k++) {
                 List<Cell> rowInResult = result.getRow(k);
@@ -169,13 +167,14 @@ public class RAImpl implements RA {
                 }
             }
 
-            //6. if not already present, insert row into result table
+            // Step 6: If not already present, insert it
             if (!alreadyAdded) {
                 result.insert(new ArrayList<>(r1)); // shallow copy of the row
             }
         }
-        //7: Return the result
-    return result;
+
+        // Step 7: Return the result
+        return result;
 }
 
     @Override
@@ -217,20 +216,11 @@ public class RAImpl implements RA {
         if (row1.size() != row2.size()) { // if row sizes equal
             return false;
         } //if
-
-        /* 
         for(int i = 0; i < row1.size(); i++) { //iterate through the rows
             if(row1.get(i).getAsString().equals(row2.get(i).getAsString()) == false) {
                 return false; // values not same
             }
         }
-        */  //it compares everything via getAsString(), which can be wrong for numbers (e.g., 1 vs 1.0) and may even throw if a Cell isn’t a string.
-
-        for (int i = 0; i < row1.size(); i++) {
-            if (row1.get(i).equals(row2.get(i)) == false) { 
-            return false;
-        }
-    }
         return true; //equal
     } //rowEquals
 }

@@ -175,7 +175,7 @@ public class RAImpl implements RA {
             }
         }
         //7: Return the result
-    return result;
+        return result;
 }
 
     @Override
@@ -217,20 +217,11 @@ public class RAImpl implements RA {
         if (row1.size() != row2.size()) { // if row sizes equal
             return false;
         } //if
-
-        /* 
         for(int i = 0; i < row1.size(); i++) { //iterate through the rows
             if(row1.get(i).getAsString().equals(row2.get(i).getAsString()) == false) {
                 return false; // values not same
             }
         }
-        */  //it compares everything via getAsString(), which can be wrong for numbers (e.g., 1 vs 1.0) and may even throw if a Cell isn’t a string.
-
-        for (int i = 0; i < row1.size(); i++) {
-            if (row1.get(i).equals(row2.get(i)) == false) { 
-            return false;
-        }
-    }
         return true; //equal
     } //rowEquals
 }

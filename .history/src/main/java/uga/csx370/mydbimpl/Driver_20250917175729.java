@@ -131,7 +131,7 @@ public class Driver {
         // Test intersect method - Priya - using select tester
         Relation intersectionTest = test_time_slot_A.intersect(Time_slot, time_slot_A);
 
-        System.out.println("Intersection results");
+        System.out.println("\n--- INTERSECTION of Time_slot and time_slot_A ---");
         intersectionTest.print();
     }
 

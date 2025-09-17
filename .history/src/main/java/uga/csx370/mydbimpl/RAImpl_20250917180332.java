@@ -227,7 +227,7 @@ public class RAImpl implements RA {
         */  //it compares everything via getAsString(), which can be wrong for numbers (e.g., 1 vs 1.0) and may even throw if a Cell isn’t a string.
 
         for (int i = 0; i < row1.size(); i++) {
-            if (row1.get(i).equals(row2.get(i)) == false) { 
+            if (!row1.get(i).equals(row2.get(i))) { // respects type + value
             return false;
         }
     }
