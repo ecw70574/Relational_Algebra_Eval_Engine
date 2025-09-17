@@ -18,18 +18,18 @@ public class RAImpl implements RA {
         Relation rel2 = new RelationBuilder()
                 .attributeNames(rel.getAttrs())
                 .attributeTypes(rel.getTypes())
-                .build();
+                .build(); // Build new relation using supplied table
 
-        int size = rel.getSize(); // number of rows in relation 
+        int size = rel.getSize(); // number of rows in supplied relation 
 
-        for (int i = 0; i < size; i++) {
-            List<Cell> curr = rel.getRow(i); // 
-            if (p.check(curr) == true) { 
-                rel2.insert(curr);
+        for (int i = 0; i < size; i++) { // Iterate through all the rows
+            List<Cell> curr = rel.getRow(i); // Get row
+            if (p.check(curr) == true) {  // Check the predicate: boolean method check
+                rel2.insert(curr); // Inser into new relation
             } // if 
         } // for 
 
-        return rel2;
+        return rel2; // Return the new relation
     }
 
     @Override
