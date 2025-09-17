@@ -76,13 +76,37 @@ public class Driver {
         prereq.loadData("src/uni_in_class_exports/prereq_export.csv");
         prereq.print();
 
+<<<<<<< Updated upstream
         //Section Table - priya
         System.out.println("This is the Original Section Table");
+=======
+        //Instructor Table - priya
+        Relation instructor = new RelationBuilder()
+        .attributeNames(List.of("ID", "name","dept_name", "salary"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        instructor.loadData("src\\uni_in_class_exports\\instructor_export.csv");
+        instructor.print();
+
+        //Prereq Table - priya
+        Relation prereq = new RelationBuilder()
+        .attributeNames(List.of("course_id", "prereq_id"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING))
+                .build();
+        prereq.loadData("src\\uni_in_class_exports\\prereq_export.csv");
+        prereq.print();
+
+        //Section Table - priya
+>>>>>>> Stashed changes
         Relation section = new RelationBuilder()
         .attributeNames(List.of("course_id", "sec_id","semester","year", "building","room_number", "time_slot_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING, Type.STRING, Type.STRING))
                 .build();
+<<<<<<< Updated upstream
         section.loadData("src/uni_in_class_exports/section_export.csv");
+=======
+        section.loadData("src\\uni_in_class_exports\\section_export.csv");
+>>>>>>> Stashed changes
         section.print();
 
         //Student Table
