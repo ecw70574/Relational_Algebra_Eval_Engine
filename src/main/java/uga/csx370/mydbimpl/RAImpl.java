@@ -37,12 +37,14 @@ public class RAImpl implements RA {
     @Override
     public Relation project(Relation rel, List<String> attrs) {
 
+        // check that attributes are present in original relation
         for (int i = 0; i < attrs.size(); i++) { // looping through the attributes that will be in new relation
             if (!rel.hasAttr(attrs.get(i))){  // check that the attribute is present in the original relation 
                 throw new IllegalArgumentException("Attribute not present."); 
             } // if 
         } // for 
 
+        // attributeTypes for new relation
         List<Type> allTypes = rel.getTypes(); // all types from Relation
         List<Type> attrsType = new ArrayList<>(); // getting the types of the attrs param
         for (int i = 0; i < attrs.size(); i++) { // loop through each attribute we want
@@ -52,7 +54,7 @@ public class RAImpl implements RA {
             attrsType.add(this_type); // add to subset of Types in new relation
         }
 
-
+        // build the new relation
         Relation rel2 = new RelationBuilder() // relation to be returned 
                 .attributeNames(attrs) // only attributes passed through as param
                 .attributeTypes(attrsType) // only the types corresponding to attribs in param
@@ -61,21 +63,18 @@ public class RAImpl implements RA {
         // List<String> relAttrs = rel.getAttrs();
 
         for (int i = 0; i < rel.getSize(); i++) { // for each row in relation 
-            List<Cell> smallRow = new ArrayList<>(); 
-            List<Cell> currRow = rel.getRow(i);
-            for (int j = 0; j < attrs.size(); j++) {
-                String currAttr = attrs.get(j);
-                int indexOG = rel.getAttrIndex(currAttr);
-                Cell thisCell = currRow.get(indexOG); // index from the og relation 
-                smallRow.add(thisCell); // add to the subseted attributes 
+            List<Cell> smallRow = new ArrayList<>(); // new row
+            List<Cell> currRow = rel.getRow(i); // old row
+            for (int j = 0; j < attrs.size(); j++) { // iterate through the row
+                String currAttr = attrs.get(j); // Get ea cell
+                int indexOG = rel.getAttrIndex(currAttr); // get index from og relation
+                Cell thisCell = currRow.get(indexOG); // create new cell  
+                smallRow.add(thisCell); // add cell to the subseted attributes 
             }
             rel2.insert(smallRow); // add the finished row to the relation 
         }
 
         return rel2; // returning relation with attrs 
-
-        // TODO Auto-generated method stub
-
     }
 
     @Override
