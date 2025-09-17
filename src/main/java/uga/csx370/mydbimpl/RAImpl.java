@@ -181,13 +181,68 @@ public class RAImpl implements RA {
     @Override
     public Relation diff(Relation rel1, Relation rel2) {
         // TODO Auto-generated method stub
+
+        // Column size must be the same
+        List<String> attrs1 = rel1.getAttrs();
+        List<String> attrs2 = rel1.getAttrs();
+        if(attrs1.size() != attrs2.size()) { // diff num of attributes
+            throw new IllegalArgumentException("Attributes of Relations Differ.");
+        } //if
+        // Column names must be the same
+        for (int i = 0; i < attrs1.size(); i++) {
+            if (attrs1.get(i).equals(attrs2.get(i))) { // diff attribute names
+                throw new IllegalArgumentException("Attributes of Relations Differ.");
+            } //if
+        } //for
+        // Columns types must be the same
+        List<Type> attrtypes1 = rel1.getTypes(); // list of attr types from rel1
+        List<Type> attrtypes2 = rel1.getTypes(); // list of attr types from rel2
+        for (int i = 0; i < attrtypes1.size(); i++) { // diff attribute types
+            if (attrtypes1.get(i) != attrtypes2.get(i)) {
+                throw new IllegalArgumentException("Attributes of Relations Differ.");
+            } //if
+        } //for
+
         throw new UnsupportedOperationException("Unimplemented method 'diff'");
     }
 
     @Override
     public Relation rename(Relation rel, List<String> origAttr, List<String> renamedAttr) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'rename'");
+        //List of attribute name row
+        List<Cell> attrNames = rel.getRow(0);
+
+        // rename attributes 
+        for (int i = 0; i < origAttr.size(); i++)  {
+            //make sure table actually has attribute
+            //make sure origAttr and rename Attr are same size
+            String oldName = origAttr.get(i);
+            String newName = renamedAttr.get(i);
+            int index = rel.getAttrIndex(oldName);
+            attrNames.set(index, Cell.val(newName));
+        } // for
+        
+        //turns List<Cell> into List<String>
+        List<String> attrNamesString = new ArrayList<>();
+        for (int i = 0; i < attrNames.size(); i++) {
+            attrNamesString.add(attrNames.get(i).getAsString());
+        }
+        
+        Relation rel2 = new RelationBuilder()
+                .attributeNames(attrNamesString)
+                .attributeTypes(rel.getTypes())
+                .build();
+
+        
+        //insert new attributes row
+        rel2.insert(attrNames);
+
+        //insert the remaining rows
+        for (int i = 1; i < rel.getSize(); i++) {
+            rel2.insert(rel.getRow(i));
+        } // for
+        
+        return rel2;
     }
 
     @Override
