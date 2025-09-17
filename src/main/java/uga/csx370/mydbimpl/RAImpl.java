@@ -209,39 +209,32 @@ public class RAImpl implements RA {
     @Override
     public Relation rename(Relation rel, List<String> origAttr, List<String> renamedAttr) {
         // TODO Auto-generated method stub
-        //List of attribute name row
-        List<Cell> attrNames = rel.getRow(0);
+        
+        if (origAttr.size() != renamedAttr.size()) {
+            throw new IllegalArgumentException("the origAttr and renamedAttr must be the same lenght");
+        }
+
+        List<String> attrNames = new ArrayList<>(rel.getAttrs()); //list of attributes 
 
         // rename attributes 
         for (int i = 0; i < origAttr.size(); i++)  {
-            //make sure table actually has attribute
-            //make sure origAttr and rename Attr are same size
             String oldName = origAttr.get(i);
             String newName = renamedAttr.get(i);
             int index = rel.getAttrIndex(oldName);
-            attrNames.set(index, Cell.val(newName));
+            attrNames.set(index, newName);
+
+
         } // for
-        
-        //turns List<Cell> into List<String>
-        List<String> attrNamesString = new ArrayList<>();
-        for (int i = 0; i < attrNames.size(); i++) {
-            attrNamesString.add(attrNames.get(i).getAsString());
-        }
-        
+                
         Relation rel2 = new RelationBuilder()
-                .attributeNames(attrNamesString)
+                .attributeNames(attrNames)
                 .attributeTypes(rel.getTypes())
                 .build();
-
-        
-        //insert new attributes row
-        rel2.insert(attrNames);
 
         //insert the remaining rows
         for (int i = 1; i < rel.getSize(); i++) {
             rel2.insert(rel.getRow(i));
         } // for
-        
         return rel2;
     }
 

@@ -128,11 +128,23 @@ public class Driver {
         });
         time_slot_A.print();
 
+<<<<<<< Updated upstream
         // Test intersect method - Priya - using select tester
         Relation intersectionTest = test_time_slot_A.intersect(Time_slot, time_slot_A);
 
         System.out.println("Intersection results");
         intersectionTest.print();
+=======
+        //Test Select Method: rename
+        RAImpl test2 = new RAImpl();
+        Relation renamed_Time_slot = test2.rename(
+                Time_slot,
+                List.of("day", "day"),
+                List.of("weekday","hourssssss")
+        );
+        System.out.println("renamed relation");
+        renamed_Time_slot.print();
+>>>>>>> Stashed changes
     }
 
 
