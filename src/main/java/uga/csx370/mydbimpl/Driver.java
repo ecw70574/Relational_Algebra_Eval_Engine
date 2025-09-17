@@ -120,9 +120,12 @@ public class Driver {
         Time_slot.loadData("src/uni_in_class_exports/time_slot_export.csv");
         Time_slot.print();
 
-        // Test Select Method: select(Relation rel, Predicate p)
+        // Test Select Method: SELECT * FROM time_slot WHERE time_slot_id = "A";
         RAImpl test_time_slot_A = new RAImpl();
-        Relation time_slot_A = test_time_slot_A.select(Time_slot, row -> row.get(0).getAsString().equals("A")); //List<Cell> row
+        Relation time_slot_A = test_time_slot_A.select(Time_slot, row -> {
+                String row_value = row.get(0).getAsString(); //row values
+                return row_value.equals("A"); //equal "A"
+        });
         time_slot_A.print();
     }
 
