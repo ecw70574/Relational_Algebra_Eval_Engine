@@ -123,6 +123,28 @@ public class RAImpl implements RA {
     @Override
     public Relation diff(Relation rel1, Relation rel2) {
         // TODO Auto-generated method stub
+
+        // Column size must be the same
+        List<String> attrs1 = rel1.getAttrs();
+        List<String> attrs2 = rel1.getAttrs();
+        if(attrs1.size() != attrs2.size()) { // diff num of attributes
+            throw new IllegalArgumentException("Attributes of Relations Differ.");
+        } //if
+        // Column names must be the same
+        for (int i = 0; i < attrs1.size(); i++) {
+            if (attrs1.get(i).equals(attrs2.get(i))) { // diff attribute names
+                throw new IllegalArgumentException("Attributes of Relations Differ.");
+            } //if
+        } //for
+        // Columns types must be the same
+        List<Type> attrtypes1 = rel1.getTypes(); // list of attr types from rel1
+        List<Type> attrtypes2 = rel1.getTypes(); // list of attr types from rel2
+        for (int i = 0; i < attrtypes1.size(); i++) { // diff attribute types
+            if (attrtypes1.get(i) != attrtypes2.get(i)) {
+                throw new IllegalArgumentException("Attributes of Relations Differ.");
+            } //if
+        } //for
+
         throw new UnsupportedOperationException("Unimplemented method 'diff'");
     }
 
