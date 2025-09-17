@@ -30,7 +30,7 @@ public class Driver {
         advisor.loadData("src/uni_in_class_exports/advisor_export.csv");
         advisor.print();
 
-        //Classroom Table
+        //Classroom Table - mariah
 
         Relation classroom = new RelationBuilder()
         .attributeNames(List.of("building", "room_number","capacity"))
@@ -39,7 +39,7 @@ public class Driver {
         classroom.loadData("src/uni_in_class_exports/classroom_export.csv");
         classroom.print();
 
-        //Course Table
+        //Course Table - mariah 
         Relation course = new RelationBuilder()
         .attributeNames(List.of("course_id", "title","dept_name","credits"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
@@ -47,7 +47,7 @@ public class Driver {
         course.loadData("src/uni_in_class_exports/course_export.csv");
         course.print();
 
-        //Dept Table
+        //Dept Table - mariah 
         Relation dept = new RelationBuilder()
         .attributeNames(List.of("dept_name", "building","budget"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
@@ -60,26 +60,15 @@ public class Driver {
         .attributeNames(List.of("ID", "name","dept_name", "salary"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
                 .build();
-        instructor.loadData("src\\uni_in_class_exports\\instructor_export.csv");
+        instructor.loadData("src/uni_in_class_exports/instructor_export.csv");
         instructor.print();
 
-<<<<<<< Updated upstream
-=======
-        //Instructor Table - priya
-        Relation instructor = new RelationBuilder()
-        .attributeNames(List.of("ID", "name","dept_name", "salary"))
-                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
-                .build();
-        instructor.loadData("src\\uni_in_class_exports\\instructor_export.csv");
-        instructor.print();
-
->>>>>>> Stashed changes
         //Prereq Table - priya
         Relation prereq = new RelationBuilder()
         .attributeNames(List.of("course_id", "prereq_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
                 .build();
-        prereq.loadData("src\\uni_in_class_exports\\prereq_export.csv");
+        prereq.loadData("src/uni_in_class_exports/prereq_export.csv");
         prereq.print();
 
         //Section Table - priya
@@ -87,7 +76,7 @@ public class Driver {
         .attributeNames(List.of("course_id", "sec_id","semester","year", "building","room_number", "time_slot_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING, Type.STRING, Type.STRING))
                 .build();
-        section.loadData("src\\uni_in_class_exports\\section_export.csv");
+        section.loadData("src/uni_in_class_exports/section_export.csv");
         section.print();
 
         //Student Table
