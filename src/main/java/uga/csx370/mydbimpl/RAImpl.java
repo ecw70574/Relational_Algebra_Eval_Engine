@@ -1,5 +1,6 @@
 package uga.csx370.mydbimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uga.csx370.mydb.Cell;
@@ -7,6 +8,7 @@ import uga.csx370.mydb.Predicate;
 import uga.csx370.mydb.RA;
 import uga.csx370.mydb.Relation;
 import uga.csx370.mydb.RelationBuilder;
+import uga.csx370.mydb.Type;
 
 
 public class RAImpl implements RA {
@@ -35,16 +37,45 @@ public class RAImpl implements RA {
     @Override
     public Relation project(Relation rel, List<String> attrs) {
 
-        Relation rel2 = new RelationBuilder() // a copy to be return 
-                .attributeNames(rel.getAttrs())
-                .attributeTypes(rel.getTypes())
-                .build();
-        
-        rel2.
+        for (int i = 0; i < attrs.size(); i++) { // looping through the attributes that will be in new relation
+            if (!rel.hasAttr(attrs.get(i))){  // check that the attribute is present in the original relation 
+                throw new IllegalArgumentException("Attribute not present."); 
+            } // if 
+        } // for 
 
+        List<Type> allTypes = rel.getTypes(); // all types from Relation
+        List<Type> attrsType = new ArrayList<>(); // getting the types of the attrs param
+        for (int i = 0; i < attrs.size(); i++) { // loop through each attribute we want
+            String currAttr = attrs.get(i); // get column name of attribute
+            int indexOG = rel.getAttrIndex(currAttr); // find its index in OG relation
+            Type this_type = allTypes.get(indexOG); // get Type at that index in OG relation
+            attrsType.add(this_type); // add to subset of Types in new relation
+        }
+
+
+        Relation rel2 = new RelationBuilder() // relation to be returned 
+                .attributeNames(attrs) // only attributes passed through as param
+                .attributeTypes(attrsType) // only the types corresponding to attribs in param
+                .build();
+
+        // List<String> relAttrs = rel.getAttrs();
+
+        for (int i = 0; i < rel.getSize(); i++) { // for each row in relation 
+            List<Cell> smallRow = new ArrayList<>(); 
+            List<Cell> currRow = rel.getRow(i);
+            for (int j = 0; j < attrs.size(); j++) {
+                String currAttr = attrs.get(j);
+                int indexOG = rel.getAttrIndex(currAttr);
+                Cell thisCell = currRow.get(indexOG); // index from the og relation 
+                smallRow.add(thisCell); // add to the subseted attributes 
+            }
+            rel2.insert(smallRow); // add the finished row to the relation 
+        }
+
+        return rel2; // returning relation with attrs 
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'project'");
+
     }
 
     @Override
