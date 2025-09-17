@@ -19,9 +19,9 @@ public interface Relation {
     public int getSize();
 
     /**
-     * Get the row at position i in the relation. i is a 0 based index.
+     * Get the rowat position i in the relation. i is a 0 based index.
      * Return a deep copy of the row to avoid modifications to the 
-     * returned row by the caller of this method.
+     * returned row  by the caller of this method.
      * 
      * @param i position of the row to return.
      * 

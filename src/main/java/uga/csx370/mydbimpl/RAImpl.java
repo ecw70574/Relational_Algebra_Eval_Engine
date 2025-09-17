@@ -2,20 +2,47 @@ package uga.csx370.mydbimpl;
 
 import java.util.List;
 
+import uga.csx370.mydb.Cell;
 import uga.csx370.mydb.Predicate;
 import uga.csx370.mydb.RA;
 import uga.csx370.mydb.Relation;
+import uga.csx370.mydb.RelationBuilder;
+
 
 public class RAImpl implements RA {
 
     @Override
     public Relation select(Relation rel, Predicate p) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'select'");
+
+        Relation rel2 = new RelationBuilder()
+                .attributeNames(rel.getAttrs())
+                .attributeTypes(rel.getTypes())
+                .build();
+
+        int size = rel.getSize(); // number of rows in relation 
+
+        for (int i = 0; i < size; i++) {
+            List<Cell> curr = rel.getRow(i); // 
+            if (p.check(curr) == true) { 
+                rel2.insert(curr);
+            } // if 
+        } // for 
+
+        return rel2;
     }
 
     @Override
     public Relation project(Relation rel, List<String> attrs) {
+
+        Relation rel2 = new RelationBuilder() // a copy to be return 
+                .attributeNames(rel.getAttrs())
+                .attributeTypes(rel.getTypes())
+                .build();
+        
+        rel2.
+
+
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'project'");
     }
