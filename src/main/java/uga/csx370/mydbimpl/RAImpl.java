@@ -78,7 +78,7 @@ public class RAImpl implements RA {
     }
 
     @Override
-    public Relation union(Relation rel1, Relation rel2) {
+    public Relation union(Relation rel1, Relation rel2) { 
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'union'");
     }
@@ -119,4 +119,20 @@ public class RAImpl implements RA {
         throw new UnsupportedOperationException("Unimplemented method 'join'");
     }
 
+    // Helper Methods
+
+    /*
+     * Checks row equality
+     */
+    public boolean rowEquals(List<Cell> row1, List<Cell> row2) {
+        if (row1.size() != row2.size()) { // if row sizes equal
+            return false;
+        } //if
+        for(int i = 0; i < row1.size(); i++) { //iterate through the rows
+            if(row1.get(i).getAsString().equals(row2.get(i).getAsString()) == false) {
+                return false; // values not same
+            }
+        }
+        return true; //equal
+    } //rowEquals
 }
