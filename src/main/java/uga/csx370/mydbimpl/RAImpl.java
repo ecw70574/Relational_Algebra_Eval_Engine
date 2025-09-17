@@ -80,7 +80,38 @@ public class RAImpl implements RA {
     @Override
     public Relation union(Relation rel1, Relation rel2) { 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'union'");
+
+        // throw exception 
+
+        // empyt relation 3 
+        Relation rel3 = new RelationBuilder()
+                .attributeNames(rel1.getAttrs())
+                .attributeTypes(rel1.getTypes())
+                .build(); // Build new relation using supplied table
+
+        // copying relation 1 to make relation 3
+        for (int i = 0; i < rel1.getSize(); i++) { // Iterate through all the rows
+            List<Cell> curr = rel1.getRow(i); // Get row
+                    rel3.insert(curr); // Inser into new relation
+        } // for 
+
+        // adding the rows of relation 2 to relation 1 if they are not duplicated
+        for (int i = 0; i < rel2.getSize(); i ++) {
+            int dup = 0; 
+            List<Cell> currRow = rel2.getRow(i); // getting the row from 2nd relation
+            for (int j = 0; j < rel3.getSize(); j++) { // comparing to all rows of relation 1 
+                if (rowEquals(rel3.getRow(j), currRow)) { 
+                    dup++; 
+                } // if            
+            } // checks all of relation 1 against current row of relation 2 
+
+            if (dup == 0) { // if no duplicates 
+                rel3.insert(currRow); // insert current row of relation 2 to relation 1
+            } // if 
+        } // for
+
+        return rel3;
+
     }
 
     @Override
