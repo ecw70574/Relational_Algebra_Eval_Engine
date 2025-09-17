@@ -64,6 +64,7 @@ public class Driver {
         instructor.print();
 
         //Prereq Table - priya
+        System.out.println("This is the Original Prereq Table");
         Relation prereq = new RelationBuilder()
         .attributeNames(List.of("course_id", "prereq_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
@@ -72,6 +73,7 @@ public class Driver {
         prereq.print();
 
         //Section Table - priya
+        System.out.println("This is the Original Section Table");
         Relation section = new RelationBuilder()
         .attributeNames(List.of("course_id", "sec_id","semester","year", "building","room_number", "time_slot_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING, Type.STRING, Type.STRING))
@@ -80,6 +82,7 @@ public class Driver {
         section.print();
 
         //Student Table
+        System.out.println("This is the Original Student Table");
         Relation student = new RelationBuilder()
         .attributeNames(List.of("ID", "name","dept_name","tot_cred"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
@@ -87,13 +90,32 @@ public class Driver {
         student.loadData("src/uni_in_class_exports/student_export.csv");
         student.print();
 
-        //Takes Table
+        //Takes Table - Amy
+        System.out.println("This is the Original Takes Table");
+        Relation takes = new RelationBuilder()
+                .attributeNames(List.of("ID", "course_id", "sec_id", "semester", "year", "grade"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING))
+                .build();
+        takes.loadData("src\\uni_in_class_exports\\takes_export.csv");
+        takes.print();
 
+        //Teaches Table - Amy
+        System.out.println("This is the Original Teaches Table");
+        Relation teaches = new RelationBuilder()
+                .attributeNames(List.of("ID", "course_id", "sec_id", "semester", "year"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        teaches.loadData("src\\uni_in_class_exports\\teaches_export.csv");
+        teaches.print();
 
-        //Teaches Table
-
-
-        //Time Slot Table
+        //Time Slot Table - Amy
+        System.out.println("This is the Original Time Slot Table");
+        Relation Time_slot = new RelationBuilder()
+                .attributeNames(List.of("time_slot_id", "day", "start_hr", "start_min", "end_hr", "end_min"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE, Type.DOUBLE, Type.DOUBLE, Type.DOUBLE))
+                .build();
+        Time_slot.loadData("src\\uni_in_class_exports\\time_slot_export.csv");
+        Time_slot.print();
 
     }
 
