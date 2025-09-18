@@ -203,6 +203,7 @@ public class Driver {
         System.out.println("Length of Time slot A tbl: " + time_slot_A.getSize());
         System.out.println("Length of CS Students tbl: " + cs_students.getSize());
         System.out.println("Length of cartesian product of the two: " + cartesian_test.getSize());
+        // need to test again with same col names to ensure exception is thrown
 
 	
     }

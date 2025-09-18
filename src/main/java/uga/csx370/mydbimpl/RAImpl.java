@@ -290,7 +290,7 @@ public class RAImpl implements RA {
         List<Type> r2types = rel2.getTypes(); // get types of 2nd relation   
 
         // Check if column names in common    
-        for (int i = 0; i < rlattrs.size(); i++){ // iterate through all attributes from rel1
+        for (int i = 0; i < r1attrs.size(); i++){ // iterate through all attributes from rel1
             for (int j = 0; j < r2attrs.size(); j++){ // iterate through all attributes from rel2
                 if (r1attrs.get(i) == r2attrs.get(j)){
                     /*
@@ -340,6 +340,8 @@ public class RAImpl implements RA {
         throw new UnsupportedOperationException("Unimplemented method 'join'");
         // Theta join, can explicitly define predicate. 
         // Can call working cartesian product function first. 
+
+        // basically will be using cartesian product and then select.
     }
 
     // Helper Methods
