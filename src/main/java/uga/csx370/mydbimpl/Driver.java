@@ -146,9 +146,11 @@ public class Driver {
 
 
 	RAImpl test3 = new RAImpl();
-	Relation project_og_timeslot = project(test3, List.of("day", "start_hr"))
+	Relation project_og_timeslot = project(test3, List.of("day", "start_hr"));
         System.out.println("Testing project: project day and start_hr from og time_slot");
         project_og_timeslot.print();
+
+	
 
 	
     }
