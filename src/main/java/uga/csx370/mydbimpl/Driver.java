@@ -183,7 +183,7 @@ public class Driver {
         //Test cartesian product method - Ella                                                                                        
         // case: with no column names in common                                                                                       
 
-        RAImpl test5 = new RAImpl();
+        //RAImpl test5 = new RAImpl();
         // Incorporating student table that has no columns in common                                                                  
         Relation student = new RelationBuilder().attributeNames(List.of("ID", "name","dept_name","tot_cred"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
