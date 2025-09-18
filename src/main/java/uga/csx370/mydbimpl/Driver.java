@@ -7,7 +7,6 @@
 package uga.csx370.mydbimpl;
 
 import java.util.List;
-
 import uga.csx370.mydb.Relation;
 import uga.csx370.mydb.RelationBuilder;
 import uga.csx370.mydb.Type;
@@ -121,6 +120,7 @@ public class Driver {
         Time_slot.print();
 
         // Test Select Method: SELECT * FROM time_slot WHERE time_slot_id = "A";
+        System.out.println("Select Test results: Select * from time_slot where time_slot_id = A");
         RAImpl test_time_slot_A = new RAImpl();
         Relation time_slot_A = test_time_slot_A.select(Time_slot, row -> {
                 String row_value = row.get(0).getAsString(); //row values
@@ -179,6 +179,30 @@ public class Driver {
         System.out.println("- set difference: ");
         Relation diff_A_time_slot = test6.diff(Time_slot, time_slot_not_A);
         diff_A_time_slot.print();
+
+        //Test cartesian product method - Ella                                                                                        
+        // case: with no column names in common                                                                                       
+
+        RAImpl test5 = new RAImpl();
+        // Incorporating student table that has no columns in common                                                                  
+        Relation student = new RelationBuilder().attributeNames(List.of("ID", "name","dept_name","tot_cred"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
+                .build();
+        student.loadData("src/uni_in_class_exports/student_export.csv");
+        // get only CS students                                                                                                       
+        Relation cs_students = test5.select(student, row -> {
+                String row_value = row.get(2).getAsString(); //row values                                                             
+                return row_value.equals("Comp. Sci."); //dept is CS                                                                   
+        });
+        System.out.println("Computer Science students only");
+        cs_students.print();
+        // cartesian product with only time slot A                                                                                    
+        Relation cartesian_test = test5.cartesianProduct(time_slot_A, cs_students);
+        System.out.println("Testing cartesian product, base functionality - no column names in common");
+        cartesian_test.print();
+        System.out.println("Length of Time slot A tbl: " + time_slot_A.getSize());
+        System.out.println("Length of CS Students tbl: " + cs_students.getSize());
+        System.out.println("Length of cartesian product of the two: " + cartesian_test.getSize());
 
 	
     }

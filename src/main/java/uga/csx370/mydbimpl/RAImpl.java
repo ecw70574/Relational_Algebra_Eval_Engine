@@ -126,6 +126,7 @@ public class RAImpl implements RA {
         } // for
         return rel3;
     }
+        
 
     @Override
     public Relation intersect(Relation rel1, Relation rel2) {
@@ -277,19 +278,54 @@ public class RAImpl implements RA {
     @Override
     public Relation cartesianProduct(Relation rel1, Relation rel2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cartesianProduct'");
+        //throw new UnsupportedOperationException("Unimplemented method 'cartesianProduct'");
+        // Output Relation will have all columns from first & all columns from second.
+        // For each row combination in 1st Relation, will have a row in new relation horizontally appended 
+        // with each row combo from 2nd Relation. No predicate needed, normally very expensive.
+
+                // TODO Auto-generated method stub                                                                                            
+        //        throw new UnsupportedOperationException("Unimplemented method 'cartesianProduct'");                                 
+        ///First implementing case where rel1 and rel2 have no common attribute names                                                 
+        List<String> allAttrs = rel1.getAttrs(); // get attributes of first relation                                                  
+        List<Type> allTypes = rel1.getTypes(); // get types of first relation                                                         
+        List<String> r2attrs = rel2.getAttrs(); // get attributes of 2nd relation                                                     
+        List<Type> r2types = rel2.getTypes(); // get types of 2nd relation                                                            
+
+        allAttrs.addAll(r2attrs); // combine attributes into one list                                                                 
+        allTypes.addAll(r2types); // combine types into one list                                                                      
+
+        Relation rel3  = new RelationBuilder()
+                .attributeNames(allAttrs)
+                .attributeTypes(allTypes)
+                .build();
+        //        List<Cell> combined_row = new ArrayList<>(); // holds row that contains all rel1 cell elements and rel2 cell elements                                                                                                                          
+        for(int rel1index = 0; rel1index < rel1.getSize(); rel1index++) {
+            for(int rel2index = 0; rel2index < rel2.getSize(); rel2index ++){
+                //combined_row.clear();                                                                                               
+                List<Cell> rel1_row = rel1.getRow(rel1index);
+                List<Cell> rel2_row = rel2.getRow(rel2index);
+                rel1_row.addAll(rel2_row); // rel 1 elements are on left of list and rel2 elements appended to the right              
+                rel3.insert(rel1_row); // insert into empty relation that has column names from each relation                         
+            }
+        }
+        return rel3;
+
     }
 
     @Override
     public Relation join(Relation rel1, Relation rel2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'join'");
+        // Natural join, joining columns with the same name and type from each Relation.
+        // Can call working cartesian product function first
     }
 
     @Override
     public Relation join(Relation rel1, Relation rel2, Predicate p) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'join'");
+        // Theta join, can explicitly define predicate. 
+        // Can call working cartesian product function first. 
     }
 
     // Helper Methods
@@ -309,4 +345,5 @@ public class RAImpl implements RA {
     }
         return true; //equal
     } //rowEquals
+
 }
