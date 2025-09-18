@@ -161,11 +161,24 @@ public class Driver {
 	Relation union_test = test4.union(time_slot_A, day_w);
 	union_test.print();
 	
-
-
-
-
-	
+        // Test diff method - Amy
+        // Test 1: diff w/ itself should be empty
+        System.out.println("Test diff method: 1) diff w/ itself should be empty");
+        RAImpl test5 = new RAImpl();
+        Relation diff_self_time_slot = test5.diff(Time_slot, Time_slot);
+        diff_self_time_slot.print();
+        // Test 2: diff w/ table (SELECT * FROM Time_slot WHERE time_slot_id != 'A';) should print only WHERE time_slot_id = 'A' rows
+	System.out.println("Test diff method: 2) diff w/ non id A returns only id A's");
+        RAImpl test6 = new RAImpl();
+        System.out.println("- table w/ non A ids: ");
+        Relation time_slot_not_A = test6.select(Time_slot, row -> {
+                String row_value = row.get(0).getAsString(); //row values
+                return !row_value.equals("A"); //equal "A"
+        });
+        time_slot_not_A.print();
+        System.out.println("- set difference: ");
+        Relation diff_A_time_slot = test6.diff(Time_slot, time_slot_not_A);
+        diff_A_time_slot.print();
 
 	
     }

@@ -180,30 +180,53 @@ public class RAImpl implements RA {
 
     @Override
     public Relation diff(Relation rel1, Relation rel2) {
-        // TODO Auto-generated method stub
-
+        
         // Column size must be the same
         List<String> attrs1 = rel1.getAttrs();
-        List<String> attrs2 = rel1.getAttrs();
+        List<String> attrs2 = rel2.getAttrs();
         if(attrs1.size() != attrs2.size()) { // diff num of attributes
             throw new IllegalArgumentException("Attributes of Relations Differ.");
         } //if
         // Column names must be the same
         for (int i = 0; i < attrs1.size(); i++) {
-            if (attrs1.get(i).equals(attrs2.get(i))) { // diff attribute names
+            if (attrs1.get(i).equals(attrs2.get(i)) == false) { // diff attribute names
                 throw new IllegalArgumentException("Attributes of Relations Differ.");
             } //if
         } //for
         // Columns types must be the same
         List<Type> attrtypes1 = rel1.getTypes(); // list of attr types from rel1
-        List<Type> attrtypes2 = rel1.getTypes(); // list of attr types from rel2
+        List<Type> attrtypes2 = rel2.getTypes(); // list of attr types from rel2
         for (int i = 0; i < attrtypes1.size(); i++) { // diff attribute types
             if (attrtypes1.get(i) != attrtypes2.get(i)) {
                 throw new IllegalArgumentException("Attributes of Relations Differ.");
             } //if
         } //for
 
-        throw new UnsupportedOperationException("Unimplemented method 'diff'");
+        // create empty table w/ same attributes/types as rel1
+        Relation result = new RelationBuilder()
+            .attributeNames(rel1.getAttrs())   
+            .attributeTypes(rel1.getTypes())   
+            .build();  
+
+        // go through rows in rel1
+        for (int i = 0; i < rel1.getSize(); i++) {
+            List<Cell> r1 = rel1.getRow(i); // rel1 row
+            // check if row exists in rel2
+            boolean existsInRel2 = false;
+            for (int j = 0; j < rel2.getSize(); j++) { //go through rows in rel2
+                List<Cell> r2 = rel2.getRow(j); // rel2 row
+                if (rowEquals(r1, r2)) { //the rows are equal: do not add into resulting table
+                    existsInRel2 = true;
+                    break; //break out of for loop
+                } //if
+            } //for
+            //insert
+            if(existsInRel2 == false) { // if in rel1 but not in rel2
+                result.insert(new ArrayList<>(r1)); //insert into result table
+            } //if
+        } //for
+
+        return result; //return new table
     }
 
     @Override
@@ -266,16 +289,8 @@ public class RAImpl implements RA {
             return false;
         } //if
 
-        /* 
-        for(int i = 0; i < row1.size(); i++) { //iterate through the rows
-            if(row1.get(i).getAsString().equals(row2.get(i).getAsString()) == false) {
-                return false; // values not same
-            }
-        }
-        */  //it compares everything via getAsString(), which can be wrong for numbers (e.g., 1 vs 1.0) and may even throw if a Cell isn’t a string.
-
         for (int i = 0; i < row1.size(); i++) {
-            if (row1.get(i).equals(row2.get(i)) == false) { 
+            if (row1.get(i).equals(row2.get(i)) == false) { //compare via .equals
             return false;
         }
     }
