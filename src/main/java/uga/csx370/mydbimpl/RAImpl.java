@@ -293,10 +293,13 @@ public class RAImpl implements RA {
         for (int i = 0; i < rlattrs.size(); i++){ // iterate through all attributes from rel1
             for (int j = 0; j < r2attrs.size(); j++){ // iterate through all attributes from rel2
                 if (r1attrs.get(i) == r2attrs.get(j)){
+                    /*
                     String rel1name = "rel1." + r1attrs.get(i);
                     String rel2name = "rel2." + r2attrs.get(j);
                     r1attrs.set(i, rel1name);
                     r2attrs.set(i, rel2name)
+                    */ 
+                   throw new IllegalArgumentException("Relation 1 and Relation 2 have common attribute names");
                 }
             }
         }                                                    
