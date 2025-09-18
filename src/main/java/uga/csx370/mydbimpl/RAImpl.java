@@ -328,10 +328,40 @@ public class RAImpl implements RA {
 
     @Override
     public Relation join(Relation rel1, Relation rel2) {
+        // want to be able to reuse cartesian product method but it doensn't allow matching column names. 
+        // can rename the duplicates with r1.colname and r2.colname to pass that through and use cartesian method.
+
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'join'");
-        // Natural join, joining columns with the same name and type from each Relation.
-        // Can call working cartesian product function first
+        //throw new UnsupportedOperationException("Unimplemented method 'join'");
+
+        List<String> r1attrs = rel1.getAttrs(); // get attributes of first relation                                                  
+        List<Type> r1types = rel1.getTypes(); // get types of first relation                                                         
+        List<String> r2attrs = rel2.getAttrs(); // get attributes of 2nd relation                                                     
+        List<Type> r2types = rel2.getTypes(); // get types of 2nd relation   
+        boolean matchfound = False;
+        String matchingname = "";
+        for (int i = 0; i < r1attrs.size(); i++){ // iterate through rel 1 colnames
+            for (int j = 0; i < r2attrs.size(); j++){ // iterate through rel 2 colnames
+                if(r1attrs.get(i).equals(r2attrs.get(j))){ // matching column names
+                    if(r1types.get(i) == r2types.get(i)){ // Check if types are compatible
+                        matchfound = True;
+                        matchingname = r1attrs.get(i);
+                        // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
+                        // rel2v2 = rename(rel2, r2attrs.get(j), "rel2." + r2attrs.get(j));
+                    } else {
+                        System.out.println("Common column name but types aren't compatible");
+                    } // if
+                    
+                } // if
+            } // for
+        }
+        if (!matchfound){ // if no matching column pair found
+            System.out.println("No common column names to join on");
+        }
+        r2attrs.remove(matchingname);
+        // Need to project to get all columns of R2 except for the one matching R1
+        rel2v2 = project(rel2, r2attrs);
+        return cartesianProduct(rel1, rel2v2); // take cartesian product of renamed cols
     }
 
     @Override

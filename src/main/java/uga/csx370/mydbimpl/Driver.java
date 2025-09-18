@@ -191,21 +191,34 @@ public class Driver {
         student.loadData("src/uni_in_class_exports/student_export.csv");
         // get only CS students                                                                                                       
         Relation cs_students = test5.select(student, row -> {
-                String row_value = row.get(2).getAsString(); //row values                                                             
-                return row_value.equals("Comp. Sci."); //dept is CS                                                                   
+                String dept = row.get(2).getAsString();      // dept_name
+                double credits = row.get(3).getAsDouble();   // tot_cred
+                return dept.equals("Comp. Sci.") && credits > 100;
         });
-        System.out.println("Computer Science students only");
+
+        System.out.println("Computer Science students with 100+ credits only");
         cs_students.print();
         // cartesian product with only time slot A                                                                                    
         Relation cartesian_test = test5.cartesianProduct(time_slot_A, cs_students);
-        System.out.println("Testing cartesian product, base functionality - no column names in common");
+        System.out.println("Testing cartesian product method: ");
         cartesian_test.print();
         System.out.println("Length of Time slot A tbl: " + time_slot_A.getSize());
         System.out.println("Length of CS Students tbl: " + cs_students.getSize());
         System.out.println("Length of cartesian product of the two: " + cartesian_test.getSize());
         // need to test again with same col names to ensure exception is thrown
 
-	
+	// Test join method with department - ella
+        Relation dept = new RelationBuilder()
+        .attributeNames(List.of("dept_name", "building","budget"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        dept.loadData("src/uni_in_class_exports/dept_export.csv");
+
+        System.out.println("Joining CS students with 100+ credits (student table) with department table");
+        Relation join_test = test6.join(cs_students, dept);
+        join_test.print()
+        
+        
     }
 
 
