@@ -144,11 +144,26 @@ public class Driver {
         System.out.println("renamed relation");
         renamed_Time_slot.print();
 
-
+	// Test project method - ella
 	RAImpl test3 = new RAImpl();
-	Relation project_og_timeslot = project(test3, List.of("day", "start_hr"));
+	Relation project_og_timeslot = test3.project(Time_slot, List.of("day", "start_hr"));
         System.out.println("Testing project: project day and start_hr from og time_slot");
         project_og_timeslot.print();
+
+	// Test union method - Ella
+	// need to get another select output to union with time_slot_A
+	RAImpl test4 = new RAImpl();
+        Relation day_w = test4.select(Time_slot, row -> {
+		String row_value = row.get(1).getAsString(); //row values
+                return row_value.equals("W"); //equal "W"
+        });
+	System.out.println("Testing union method");
+	Relation union_test = test4.union(time_slot_A, day_w);
+	union_test.print();
+	
+
+
+
 
 	
 
