@@ -15,8 +15,8 @@ public class RAImpl implements RA {
 
     @Override
     public Relation select(Relation rel, Predicate p) {
-        // TODO Auto-generated method stub
 
+        // framework for new relation w
         Relation rel2 = new RelationBuilder()
                 .attributeNames(rel.getAttrs())
                 .attributeTypes(rel.getTypes())
@@ -70,20 +70,35 @@ public class RAImpl implements RA {
                 int indexOG = rel.getAttrIndex(currAttr); // get index from og relation
                 Cell thisCell = currRow.get(indexOG); // create new cell  
                 smallRow.add(thisCell); // add cell to the subseted attributes 
-            }
+            } // for 
             rel2.insert(smallRow); // add the finished row to the relation 
-        }
-
+        } // for 
         return rel2; // returning relation with attrs 
-    }
+    } // project
 
     @Override
     public Relation union(Relation rel1, Relation rel2) { 
-        // TODO Auto-generated method stub
 
-        // throw exception 
+        //1. check compatibility. Same # of cols, attribute names same order, types same order
+        //check if number of cols same
 
-        // empyt relation 3 
+        if (rel1.getAttrs().size() != rel2.getAttrs().size()) {
+            throw new IllegalArgumentException("Relations are not compatible");
+        } // if 
+
+        //attribute names and types same order?
+        for (int i = 0; i < rel1.getAttrs().size(); i++) {
+            String name1 = rel1.getAttrs().get(i);    //comparing attr1 vs attri2 col by col
+            String name2 = rel2.getAttrs().get(i);
+            Type type1 = rel1.getTypes().get(i);      //comparing type1 vs type2 col by col
+            Type type2 = rel2.getTypes().get(i);
+
+            if (!name1.equals(name2) || type1 != type2) {
+                throw new IllegalArgumentException("Relations are not compatible.");
+            } // if
+        } // for
+
+        // framework for relation 3
         Relation rel3 = new RelationBuilder()
                 .attributeNames(rel1.getAttrs())
                 .attributeTypes(rel1.getTypes())
@@ -92,7 +107,7 @@ public class RAImpl implements RA {
         // copying relation 1 to make relation 3
         for (int i = 0; i < rel1.getSize(); i++) { // Iterate through all the rows
             List<Cell> curr = rel1.getRow(i); // Get row
-                    rel3.insert(curr); // Inser into new relation
+                    rel3.insert(curr); // Insert into new relation
         } // for 
 
         // adding the rows of relation 2 to relation 1 if they are not duplicated
@@ -109,9 +124,7 @@ public class RAImpl implements RA {
                 rel3.insert(currRow); // insert current row of relation 2 to relation 1
             } // if 
         } // for
-
         return rel3;
-
     }
 
     @Override
