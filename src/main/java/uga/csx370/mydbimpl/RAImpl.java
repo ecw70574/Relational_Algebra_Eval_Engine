@@ -338,13 +338,13 @@ public class RAImpl implements RA {
         List<Type> r1types = rel1.getTypes(); // get types of first relation                                                         
         List<String> r2attrs = rel2.getAttrs(); // get attributes of 2nd relation                                                     
         List<Type> r2types = rel2.getTypes(); // get types of 2nd relation   
-        boolean matchfound = False;
+        boolean matchfound = false;
         String matchingname = "";
         for (int i = 0; i < r1attrs.size(); i++){ // iterate through rel 1 colnames
             for (int j = 0; i < r2attrs.size(); j++){ // iterate through rel 2 colnames
                 if(r1attrs.get(i).equals(r2attrs.get(j))){ // matching column names
                     if(r1types.get(i) == r2types.get(i)){ // Check if types are compatible
-                        matchfound = True;
+                        matchfound = true;
                         matchingname = r1attrs.get(i);
                         // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
                         // rel2v2 = rename(rel2, r2attrs.get(j), "rel2." + r2attrs.get(j));
@@ -360,7 +360,7 @@ public class RAImpl implements RA {
         }
         r2attrs.remove(matchingname);
         // Need to project to get all columns of R2 except for the one matching R1
-        rel2v2 = project(rel2, r2attrs);
+        Relation rel2v2 = project(rel2, r2attrs);
         return cartesianProduct(rel1, rel2v2); // take cartesian product of renamed cols
     }
 
