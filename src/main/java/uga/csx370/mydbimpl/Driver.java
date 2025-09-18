@@ -216,7 +216,7 @@ public class Driver {
 
         System.out.println("Joining CS students with 100+ credits (student table) with department table");
         Relation join_test = test6.join(cs_students, dept);
-        join_test.print()
+        join_test.print();
         
         
     }
