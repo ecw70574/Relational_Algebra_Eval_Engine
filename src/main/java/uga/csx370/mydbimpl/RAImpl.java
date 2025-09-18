@@ -341,9 +341,9 @@ public class RAImpl implements RA {
         boolean matchfound = false;
         String matchingname = "";
         for (int i = 0; i < r1attrs.size(); i++){ // iterate through rel 1 colnames
-            for (int j = 0; i < r2attrs.size(); j++){ // iterate through rel 2 colnames
+            for (int j = 0; j < r2attrs.size(); j++){ // iterate through rel 2 colnames
                 if(r1attrs.get(i).equals(r2attrs.get(j))){ // matching column names
-                    if(r1types.get(i) == r2types.get(i)){ // Check if types are compatible
+                    if(r1types.get(i) == r2types.get(j)){ // Check if types are compatible
                         matchfound = true;
                         matchingname = r1attrs.get(i);
                         // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
