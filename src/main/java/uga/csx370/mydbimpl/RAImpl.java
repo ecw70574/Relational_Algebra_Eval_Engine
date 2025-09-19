@@ -367,11 +367,22 @@ public class RAImpl implements RA {
     @Override
     public Relation join(Relation rel1, Relation rel2, Predicate p) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'join'");
+        //throw new UnsupportedOperationException("Unimplemented method 'join'");
         // Theta join, can explicitly define predicate. 
         // Can call working cartesian product function first. 
-
-        // basically will be using cartesian product and then select.
+        List<String> r1attrs = rel1.getAttrs(); // get attributes of first relation                                                  
+        List<Type> r1types = rel1.getTypes(); // get types of first relation                                                         
+        List<String> r2attrs = rel2.getAttrs(); // get attributes of 2nd relation                                                     
+        List<Type> r2types = rel2.getTypes(); // get types of 2nd relation   
+        for (int i = 0; i < r1attrs.size(); i++){
+            String current_attr = r1attrs.get(i);
+            if(r2attrs.contains(current_attr)){
+                throw new IllegalArgumentException("Relation 1 and Relation 2 have common attribute names");
+            } // throw exception if two relations have common columns.
+        }
+        Relation cartesian = cartesianProduct(rel1, rel2);
+        return select(cartesian, p);
+        // using cartesian product and then select to simulate theta join
     }
 
     // Helper Methods
