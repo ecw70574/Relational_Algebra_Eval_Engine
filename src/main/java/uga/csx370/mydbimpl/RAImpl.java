@@ -337,6 +337,8 @@ public class RAImpl implements RA {
         List<Type> r1types = rel1.getTypes(); // get types of first relation                                                         
         List<String> r2attrs = rel2.getAttrs(); // get attributes of 2nd relation                                                     
         List<Type> r2types = rel2.getTypes(); // get types of 2nd relation   
+
+        //find the matching column name
         boolean matchfound = false;
         String matchingname = "";
         for (int i = 0; i < r1attrs.size(); i++){ // iterate through rel 1 colnames
@@ -358,8 +360,7 @@ public class RAImpl implements RA {
             System.out.println("No common column names to join on");
         }
 
-        // Amy tried idk
-        // rename rel1 
+        // List of rel1 columns w/ matchingname changed to rel1.matchingname
         String newColRel1 = "rel1." + matchingname;
         List<String> newrel1attrs = rel1.getAttrs(); // Ex: id, name -> rel1.ad, name
         for (int i = 0; i < newrel1attrs.size(); i++) {
@@ -367,8 +368,8 @@ public class RAImpl implements RA {
                 newrel1attrs.set(i, newColRel1); //rename to rel1.colname
             }
         }
-        Relation newrel1 = rename(rel1, r1attrs, newrel1attrs); //rename
-        //rename rel2
+        Relation newrel1 = rename(rel1, r1attrs, newrel1attrs); // Table with renamed columns
+        // List of rel2 columns w/ matchingname changed to rel2.matchingname
         String newColRel2 = "rel2." + matchingname;
         List<String> newrel2attrs = rel2.getAttrs();
         for (int i = 0; i < newrel2attrs.size(); i++) {
@@ -376,27 +377,41 @@ public class RAImpl implements RA {
                 newrel2attrs.set(i, newColRel2); //rename to rel2.colname
             }
         }
-        Relation newrel2 = rename(rel2, r2attrs, newrel2attrs); //rename
+        Relation newrel2 = rename(rel2, r2attrs, newrel2attrs); // Table with renamed columns
 
         //cartesian product w/ renamed tables
         Relation cartesianProd = cartesianProduct(newrel1, newrel2);
 
         //Select rows where newColRel1 == newColRel2
         Relation sameMatch = select(cartesianProd, row -> {
-            //get columns of match
-            int indexRel1 = cartesianProd.getAttrIndex(newColRel1); //index of rel1 renamed matchingname
-            int indexRel2 = cartesianProd.getAttrIndex(newColRel2); //index of rel2 renamed matchingname
+            int indexRel1 = cartesianProd.getAttrIndex(newColRel1); //index of column of rel1 renamed matchingname
+            int indexRel2 = cartesianProd.getAttrIndex(newColRel2); //index of column of rel2 renamed matchingname
             String rowValueRel1 = row.get(indexRel1).getAsString();
             String rowValueRel2 = row.get(indexRel2).getAsString();
             return rowValueRel1.equals(rowValueRel2);
         });
 
-        //Project the 
-        return sameMatch; //not the answer
+        //Project all the columns except for rel2 renamed matchingname
+        // - ex: rel1.id, name, rel2.id, grade -> rel1.id, name, grade 
+        // project(Relation rel, List<String> attrs)
+        //Relation newCols = project(sameMatch)
+        List<String> matchattrs = sameMatch.getAttrs();
+        for (int i = 0; i < matchattrs.size(); i++){
+            if(matchattrs.get(i).equals(newColRel2)) {
+                matchattrs.remove(i); //remove the column name from list
+            }
+        }
+        Relation removeNewColRel2 = project(sameMatch, matchattrs);
 
+        //rename the rel2 renamed matchingname to matchingname
+        List<String> finalattrs = removeNewColRel2.getAttrs();
+        for (int i = 0; i < finalattrs.size(); i++){
+            if(finalattrs.get(i).equals(newColRel1)) {
+                matchattrs.set(i, matchingname); //rename the column name to matchingname
+            }
+        }
 
-
-
+        return rename(removeNewColRel2, matchattrs, finalattrs);
 
         //Ella's original code
 /*         r2attrs.remove(matchingname);
