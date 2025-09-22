@@ -330,9 +330,6 @@ public class RAImpl implements RA {
         // want to be able to reuse cartesian product method but it doensn't allow matching column names. 
         // can rename the duplicates with r1.colname and r2.colname to pass that through and use cartesian method.
 
-        // TODO Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'join'");
-
         List<String> r1attrs = rel1.getAttrs(); // get attributes of first relation                                                  
         List<Type> r1types = rel1.getTypes(); // get types of first relation                                                         
         List<String> r2attrs = rel2.getAttrs(); // get attributes of 2nd relation                                                     
@@ -350,14 +347,15 @@ public class RAImpl implements RA {
                         // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
                         // rel2v2 = rename(rel2, r2attrs.get(j), "rel2." + r2attrs.get(j));
                     } else {
-                        System.out.println("Common column name but types aren't compatible");
+                        // System.out.println("Common column name but types aren't compatible");
+                        throw new IllegalArgumentException("Relation 1 and Relation 2 have Common column name but types aren't compatible");
                     } // if
-                    
                 } // if
             } // for
         }
         if (!matchfound){ // if no matching column pair found
-            System.out.println("No common column names to join on");
+            // System.out.println("No common column names to join on");
+            throw new IllegalArgumentException("Relation 1 and Relation 2 have no common column names to join on.");
         }
 
         // List of rel1 columns w/ matchingname changed to rel1.matchingname
@@ -393,8 +391,6 @@ public class RAImpl implements RA {
 
         //Project all the columns except for rel2 renamed matchingname
         // - ex: rel1.id, name, rel2.id, grade -> rel1.id, name, grade 
-        // project(Relation rel, List<String> attrs)
-        //Relation newCols = project(sameMatch)
         List<String> matchattrs = sameMatch.getAttrs();
         for (int i = 0; i < matchattrs.size(); i++){
             if(matchattrs.get(i).equals(newColRel2)) {
@@ -412,13 +408,6 @@ public class RAImpl implements RA {
         }
 
         return rename(removeNewColRel2, matchattrs, finalattrs);
-
-        //Ella's original code
-/*         r2attrs.remove(matchingname);
-        // Need to project to get all columns of R2 except for the one matching R1
-        Relation rel2v2 = project(rel2, r2attrs);
-        return cartesianProduct(rel1, rel2v2); // take cartesian product of renamed cols
-*/
     }
 
     @Override
