@@ -219,6 +219,18 @@ public class Driver {
         Relation join_test = test6.join(cs_students, dept);
         join_test.print();
         
+        //Test theta join - Mariah 
+        RAImpl testJoin = new RAImpl();
+        System.out.println("Joining CS stude");
+        Relation join_test2 = testJoin.join(cs_students, dept, row -> {
+                String studentDept = row.get(3).getAsString();
+                String deptDept = row.get(1).getAsString();
+                return studentDept.equals(deptDept);
+        });
+        join_test2.print();
+
+
+
         
     }
 
