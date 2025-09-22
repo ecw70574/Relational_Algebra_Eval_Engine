@@ -219,17 +219,26 @@ public class Driver {
         Relation join_test = test6.join(cs_students, dept);
         join_test.print();
         
-        //Test theta join - Mariah 
+        System.out.println("This is the origional advisor Table");
+        Relation advisor1 = new RelationBuilder()
+                .attributeNames(List.of("s_ID", "i_ID"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING))
+                .build();
+        advisor1.loadData("src/uni_in_class_exports/advisor_export.csv");        
+
+
+        System.out.println("This is the origional Instructor Table");
+        Relation instructor1 = new RelationBuilder()
+        .attributeNames(List.of("ID", "name","dept_name", "salary"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        instructor1.loadData("src/uni_in_class_exports/instructor_export.csv");
+
+        //Test natural join - Mariah 
         RAImpl testJoin = new RAImpl();
         System.out.println("Joining CS stude");
-        Relation join_test2 = testJoin.join(cs_students, dept, row -> {
-                String studentDept = row.get(3).getAsString();
-                String deptDept = row.get(1).getAsString();
-                return studentDept.equals(deptDept);
-        });
+        Relation join_test2 = testJoin.join(advisor1, instructor1);
         join_test2.print();
-
-
 
         
     }
