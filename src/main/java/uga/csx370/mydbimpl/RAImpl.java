@@ -406,7 +406,6 @@ public class RAImpl implements RA {
                 matchattrs.set(i, matchingname); //rename the column name to matchingname
             }
         }
-
         return rename(removeNewColRel2, matchattrs, finalattrs);
     }
 
