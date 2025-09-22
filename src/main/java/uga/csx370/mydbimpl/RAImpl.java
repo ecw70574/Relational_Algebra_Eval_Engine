@@ -323,7 +323,6 @@ public class RAImpl implements RA {
             }
         }
         return rel3;
-
     }
 
     @Override
@@ -358,10 +357,53 @@ public class RAImpl implements RA {
         if (!matchfound){ // if no matching column pair found
             System.out.println("No common column names to join on");
         }
-        r2attrs.remove(matchingname);
+
+        // Amy tried idk
+        // rename rel1 
+        String newColRel1 = "rel1." + matchingname;
+        List<String> newrel1attrs = rel1.getAttrs(); // Ex: id, name -> rel1.ad, name
+        for (int i = 0; i < newrel1attrs.size(); i++) {
+            if (newrel1attrs.get(i).equals(matchingname)) { // if the col is same as matching col
+                newrel1attrs.set(i, newColRel1); //rename to rel1.colname
+            }
+        }
+        Relation newrel1 = rename(rel1, r1attrs, newrel1attrs); //rename
+        //rename rel2
+        String newColRel2 = "rel2." + matchingname;
+        List<String> newrel2attrs = rel2.getAttrs();
+        for (int i = 0; i < newrel2attrs.size(); i++) {
+            if (newrel2attrs.get(i).equals(matchingname)) { // if the col is same as matching col
+                newrel2attrs.set(i, newColRel2); //rename to rel2.colname
+            }
+        }
+        Relation newrel2 = rename(rel2, r2attrs, newrel2attrs); //rename
+
+        //cartesian product w/ renamed tables
+        Relation cartesianProd = cartesianProduct(newrel1, newrel2);
+
+        //Select rows where newColRel1 == newColRel2
+        Relation sameMatch = select(cartesianProd, row -> {
+            //get columns of match
+            int indexRel1 = cartesianProd.getAttrIndex(newColRel1); //index of rel1 renamed matchingname
+            int indexRel2 = cartesianProd.getAttrIndex(newColRel2); //index of rel2 renamed matchingname
+            String rowValueRel1 = row.get(indexRel1).getAsString();
+            String rowValueRel2 = row.get(indexRel2).getAsString();
+            return rowValueRel1.equals(rowValueRel2);
+        });
+
+        //Project the 
+        return sameMatch; //not the answer
+
+
+
+
+
+        //Ella's original code
+/*         r2attrs.remove(matchingname);
         // Need to project to get all columns of R2 except for the one matching R1
         Relation rel2v2 = project(rel2, r2attrs);
         return cartesianProduct(rel1, rel2v2); // take cartesian product of renamed cols
+*/
     }
 
     @Override

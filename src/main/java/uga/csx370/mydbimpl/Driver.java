@@ -7,6 +7,7 @@
 package uga.csx370.mydbimpl;
 
 import java.util.List;
+
 import uga.csx370.mydb.Relation;
 import uga.csx370.mydb.RelationBuilder;
 import uga.csx370.mydb.Type;
@@ -49,7 +50,7 @@ public class Driver {
         course.print();
 
         //Dept Table - mariah 
-        System.out.println("This is the origional deptartment Table");
+        System.out.println("This is the origional department Table");
         Relation dept = new RelationBuilder()
         .attributeNames(List.of("dept_name", "building","budget"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
@@ -163,11 +164,11 @@ public class Driver {
 	
         // Test diff method - Amy
         // Test 1: diff w/ itself should be empty
-        System.out.println("Test diff method: 1) diff w/ itself should be empty");
+/*       System.out.println("Test diff method: 1) diff w/ itself should be empty");
         RAImpl test5 = new RAImpl();
         Relation diff_self_time_slot = test5.diff(Time_slot, Time_slot);
         diff_self_time_slot.print();
-        // Test 2: diff w/ table (SELECT * FROM Time_slot WHERE time_slot_id != 'A';) should print only WHERE time_slot_id = 'A' rows
+*/        // Test 2: diff w/ table (SELECT * FROM Time_slot WHERE time_slot_id != 'A';) should print only WHERE time_slot_id = 'A' rows
 	System.out.println("Test diff method: 2) diff w/ non id A returns only id A's");
         RAImpl test6 = new RAImpl();
         System.out.println("- table w/ non A ids: ");
@@ -183,7 +184,7 @@ public class Driver {
         //Test cartesian product method - Ella                                                                                        
         // case: with no column names in common                                                                                       
 
-        //RAImpl test5 = new RAImpl();
+        RAImpl test5 = new RAImpl();
         // Incorporating student table that has no columns in common                                                                  
         Relation student = new RelationBuilder().attributeNames(List.of("ID", "name","dept_name","tot_cred"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
