@@ -257,7 +257,7 @@ public class RAImpl implements RA {
         for (int i = 0; i < origAttr.size(); i++)  {
             String oldName = origAttr.get(i);
             String newName = renamedAttr.get(i);
-            int index = rel.getAttrIndex(oldName);
+            int index = rel.getAttrIndex(oldName); // throws exception if oldName is not in rel
             attrNames.set(index, newName);
 
 
@@ -269,7 +269,7 @@ public class RAImpl implements RA {
                 .build();
 
         //insert the remaining rows
-        for (int i = 1; i < rel.getSize(); i++) {
+        for (int i = 0; i < rel.getSize(); i++) {
             rel2.insert(rel.getRow(i));
         } // for
         return rel2;
