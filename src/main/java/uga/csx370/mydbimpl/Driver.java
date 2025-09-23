@@ -237,7 +237,7 @@ public class Driver {
         dept1.print();
         
         //Test natural join - Mariah 
-        RAImpl testJoin = new RAImpl();
+        RA testJoin = new RAImpl();
         System.out.println("Joining instructor and department");
         Relation join_test2 = testJoin.join(instructor1, dept1);
         join_test2.print();
