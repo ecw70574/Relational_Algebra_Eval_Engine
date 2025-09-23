@@ -423,8 +423,8 @@ public class RAImpl implements RA {
         List<String> finalattrs = removeNewColRel2.getAttrs();
         for (int i = 0; i < matchingnames.size(); i++){
             String renameTo = "rel1." + matchingnames.get(i);
-            int idx = finalAttrs.indexOf(renameTo);
-            finalAttrs.set(idx, renameTo);
+            int idx = finalattrs.indexOf(renameTo);
+            finalattrs.set(idx, renameTo);
         }
 
         return rename(removeNewColRel2, finalattrs, matchattrs);
