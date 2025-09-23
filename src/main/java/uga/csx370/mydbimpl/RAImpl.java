@@ -408,7 +408,7 @@ public class RAImpl implements RA {
                 String newColRel2 = "rel2." + matchingnames.get(k);
                 int indexRel1 = cartesian.getAttrIndex(newColRel1); //index of column of rel1 renamed matchingname
                 int indexRel2 = cartesian.getAttrIndex(newColRel2); //index of column of rel2 renamed matchingname
-                if ((!row.get(indexRel1)).equals(row.get(indexRel2))){
+                if (!row.get(indexRel1).equals(row.get(indexRel2))){
                     return false;
                 }
                 return true;
