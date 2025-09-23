@@ -60,7 +60,8 @@ public class RAImpl implements RA {
                 .attributeTypes(attrsType) // only the types corresponding to attribs in param
                 .build();
 
-        // List<String> relAttrs = rel.getAttrs();
+
+        int dup = 0; // for checking for duplicates later 
 
         for (int i = 0; i < rel.getSize(); i++) { // for each row in relation 
             List<Cell> smallRow = new ArrayList<>(); // new row
@@ -71,7 +72,20 @@ public class RAImpl implements RA {
                 Cell thisCell = currRow.get(indexOG); // create new cell  
                 smallRow.add(thisCell); // add cell to the subseted attributes 
             } // for 
-            rel2.insert(smallRow); // add the finished row to the relation 
+
+            dup = 0; // resetting dup to check the current row 
+
+            for (int k = 0; k < rel2.getSize(); k++) { // for all of the rows already added to relation 2
+                if (rowEquals(smallRow, rel2.getRow(k))) { // compare the row we are about insert to all the ones inserted
+                    dup++; // if equals then duplicate found 
+                    break; // break out of loop
+                } // if 
+            } // for 
+
+            if (dup == 0) { // if row is not a duplicate 
+                rel2.insert(smallRow); // add the finished row to the relation 
+            } // if 
+            
         } // for 
         return rel2; // returning relation with attrs 
     } // project
@@ -435,8 +449,6 @@ public class RAImpl implements RA {
 
     @Override
     public Relation join(Relation rel1, Relation rel2, Predicate p) {
-        // TODO Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'join'");
         // Theta join, can explicitly define predicate. 
         // Can call working cartesian product function first. 
         List<String> r1attrs = rel1.getAttrs(); // get attributes of first relation                                                  
