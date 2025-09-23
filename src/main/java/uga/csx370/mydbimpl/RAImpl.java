@@ -351,6 +351,7 @@ public class RAImpl implements RA {
 
         //find the matching column name
         boolean matchfound = false;
+        List<String> matchingnames = new ArrayList<>();
         String matchingname = "";
         for (int i = 0; i < r1attrs.size(); i++){ // iterate through rel 1 colnames
             for (int j = 0; j < r2attrs.size(); j++){ // iterate through rel 2 colnames
@@ -358,6 +359,7 @@ public class RAImpl implements RA {
                     if(r1types.get(i) == r2types.get(j)){ // Check if types are compatible
                         matchfound = true;
                         matchingname = r1attrs.get(i);
+                        matchingnames.add(matchingname);
                         System.out.println("matchingname: " + matchingname);
                         // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
                         // rel2v2 = rename(rel2, r2attrs.get(j), "rel2." + r2attrs.get(j));
@@ -373,6 +375,16 @@ public class RAImpl implements RA {
             throw new IllegalArgumentException("Relation 1 and Relation 2 have no common column names to join on.");
         }
 
+        List<String> newrel1Attrs = new ArrayList<>(r1attrs);
+        List<String> newrel2Attrs = new ArrayList<>(r2attrs);
+        // Rename all matching column pairs at once to rel1.colname and rel2.colname
+        for(int i=0; i< matchingnames.size(); i++){
+            int index1 = newrel1Attrs.indexOf(matchingnames.get(i));
+            int index2 = newrel2Attrs.indexOf(matchingnames.get(i));
+            newrel1Attrs.set(index1, "rel1." + matchingnames.get(i));
+            newrel2Attrs.set(index2, "rel2." + matchingnames.get(i));
+        }
+        /*
         // List of rel1 columns w/ matchingname changed to rel1.matchingname
         System.out.println("List of rel1 columns w/ matchingname changed to rel1.matchingname");
         String newColRel1 = "rel1." + matchingname;
@@ -382,7 +394,10 @@ public class RAImpl implements RA {
                 newrel1attrs.set(i, newColRel1); //rename to rel1.colname
             }
         }
-        Relation newrel1 = rename(rel1, r1attrs, newrel1attrs); // Table with renamed columns
+        */
+
+        Relation newrel1 = rename(rel1, r1attrs, newrel1Attrs); // Table with renamed columns
+        /*
         // List of rel2 columns w/ matchingname changed to rel2.matchingname
         System.out.println("List of rel2 columns w/ matchingname changed to rel2.matchingname");
         String newColRel2 = "rel2." + matchingname;
@@ -392,49 +407,42 @@ public class RAImpl implements RA {
                 newrel2attrs.set(i, newColRel2); //rename to rel2.colname
             }
         }
-        Relation newrel2 = rename(rel2, r2attrs, newrel2attrs); // Table with renamed columns
+        */
+        Relation newrel2 = rename(rel2, r2attrs, newrel2Attrs); // Table with renamed columns
 
-        //cartesian product w/ renamed tables
+        // cartesian of newrel1 and newrel2 (all pairs are renamed at once)
         System.out.println("Made cartesian product w/ renamed tables");
-        Relation cartesianProd = cartesianProduct(newrel1, newrel2);
+        Relation cartesian = cartesianProduct(newrel1, newrel2);
 
         //Select rows where newColRel1 == newColRel2
         System.out.println("New table w/ Select rows where newColRel1 == newColRel2");
-        Relation sameMatch = select(cartesianProd, row -> {
-            int indexRel1 = cartesianProd.getAttrIndex(newColRel1); //index of column of rel1 renamed matchingname
-            int indexRel2 = cartesianProd.getAttrIndex(newColRel2); //index of column of rel2 renamed matchingname
-            //String rowValueRel1 = row.get(indexRel1).getAsString();
-            //String rowValueRel2 = row.get(indexRel2).getAsString();
-            return (row.get(indexRel1)).equals(row.get(indexRel2));
+        Relation filtered_relation = select(cartesian, row -> {
+            for (int k = 0; k < matchingnames.size(); k++){
+                String newColRel1 = "rel1." + matchingnames.get(k);
+                String newColRel2 = "rel2." + matchingnames.get(k);
+                int indexRel1 = cartesian.getAttrIndex(newColRel1); //index of column of rel1 renamed matchingname
+                int indexRel2 = cartesian.getAttrIndex(newColRel2); //index of column of rel2 renamed matchingname
+                if (!row.get(indexRel1).equals(row.get(indexRel2))){
+                    return false;
+                }
+            }
+            return true;
         });
-        System.out.println("SELECT worked");
-
         //Project all the columns except for rel2 renamed matchingname
         // - ex: rel1.id, name, rel2.id, grade -> rel1.id, name, grade 
-        List<String> matchattrs = sameMatch.getAttrs();
-        for (int i = 0; i < matchattrs.size(); i++){
-            if(matchattrs.get(i).equals(newColRel2)) {
-                matchattrs.remove(i); //remove the column name from list
-            }
+        List<String> matchattrs = filtered_relation.getAttrs();
+        for (int i = 0; i < matchingnames.size(); i++){
+            matchattrs.remove("rel2." + matchingnames.get(i));
         }
-        Relation removeNewColRel2 = project(sameMatch, matchattrs);
+        Relation removeNewColRel2 = project(filtered_relation, matchattrs);
 
         //rename the rel2 renamed matchingname to matchingname
         List<String> finalattrs = removeNewColRel2.getAttrs();
-        for (int i = 0; i < finalattrs.size(); i++){
-            if(finalattrs.get(i).equals(newColRel1)) {
-                matchattrs.set(i, matchingname); //rename the column name to matchingname
-            }
+        for (int i = 0; i < matchingnames.size(); i++){
+            String renameTo = "rel1." + matchingnames.get(i);
+            int idx = finalattrs.indexOf(renameTo);
+            finalattrs.set(idx, renameTo);
         }
-
-        for (int i = 0; i < matchattrs.size(); i++) {
-            System.out.print(matchattrs.get(i) + ", ");
-        }
-        System.out.println();
-        for (int i = 0; i < finalattrs.size(); i++) {
-            System.out.print(finalattrs.get(i) + ", ");
-        }
-        System.out.println();
 
         return rename(removeNewColRel2, finalattrs, matchattrs);
     }
