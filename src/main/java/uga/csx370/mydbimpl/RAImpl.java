@@ -411,8 +411,8 @@ public class RAImpl implements RA {
                 if (!row.get(indexRel1).equals(row.get(indexRel2))){
                     return false;
                 }
-                return true;
             }
+            return true;
         });
         //Project all the columns except for rel2 renamed matchingname
         // - ex: rel1.id, name, rel2.id, grade -> rel1.id, name, grade 
