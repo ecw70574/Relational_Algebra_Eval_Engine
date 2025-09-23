@@ -112,7 +112,7 @@ public class Driver {
         teaches.print();
 */
         //Time Slot Table - Amy
-        System.out.println("This is the Original Time Slot Table");
+/*        System.out.println("This is the Original Time Slot Table");
         Relation Time_slot = new RelationBuilder()
                 .attributeNames(List.of("time_slot_id", "day", "start_hr", "start_min", "end_hr", "end_min"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE, Type.DOUBLE, Type.DOUBLE, Type.DOUBLE))
@@ -161,7 +161,7 @@ public class Driver {
 	System.out.println("Testing union method");
 	Relation union_test = test4.union(time_slot_A, day_w);
 	union_test.print();
-	
+*/	
         // Test diff method - Amy
         // Test 1: diff w/ itself should be empty
 /*       System.out.println("Test diff method: 1) diff w/ itself should be empty");
@@ -169,7 +169,7 @@ public class Driver {
         Relation diff_self_time_slot = test5.diff(Time_slot, Time_slot);
         diff_self_time_slot.print();
 */        // Test 2: diff w/ table (SELECT * FROM Time_slot WHERE time_slot_id != 'A';) should print only WHERE time_slot_id = 'A' rows
-	System.out.println("Test diff method: 2) diff w/ non id A returns only id A's");
+/*	System.out.println("Test diff method: 2) diff w/ non id A returns only id A's");
         RAImpl test6 = new RAImpl();
         System.out.println("- table w/ non A ids: ");
         Relation time_slot_not_A = test6.select(Time_slot, row -> {
@@ -218,14 +218,7 @@ public class Driver {
         System.out.println("Joining CS students with 100+ credits (student table) with department table");
         Relation join_test = test6.join(cs_students, dept);
         join_test.print();
-        
-        System.out.println("This is the origional advisor Table");
-        Relation advisor1 = new RelationBuilder()
-                .attributeNames(List.of("s_ID", "i_ID"))
-                .attributeTypes(List.of(Type.STRING, Type.STRING))
-                .build();
-        advisor1.loadData("src/uni_in_class_exports/advisor_export.csv");        
-
+*/        
 
         System.out.println("This is the origional Instructor Table");
         Relation instructor1 = new RelationBuilder()
@@ -233,11 +226,20 @@ public class Driver {
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
                 .build();
         instructor1.loadData("src/uni_in_class_exports/instructor_export.csv");
+        instructor1.print();
 
+        System.out.println("This is the origional department Table");
+        Relation dept1 = new RelationBuilder()
+        .attributeNames(List.of("dept_name", "building","budget"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        dept1.loadData("src/uni_in_class_exports/dept_export.csv");
+        dept1.print();
+        
         //Test natural join - Mariah 
         RAImpl testJoin = new RAImpl();
-        System.out.println("Joining CS stude");
-        Relation join_test2 = testJoin.join(advisor1, instructor1);
+        System.out.println("Joining instructor and department");
+        Relation join_test2 = testJoin.join(instructor1, dept1);
         join_test2.print();
 
         

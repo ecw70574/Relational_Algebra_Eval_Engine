@@ -344,6 +344,7 @@ public class RAImpl implements RA {
                     if(r1types.get(i) == r2types.get(j)){ // Check if types are compatible
                         matchfound = true;
                         matchingname = r1attrs.get(i);
+                        System.out.println("matchingname: " + matchingname);
                         // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
                         // rel2v2 = rename(rel2, r2attrs.get(j), "rel2." + r2attrs.get(j));
                     } else {
@@ -359,6 +360,7 @@ public class RAImpl implements RA {
         }
 
         // List of rel1 columns w/ matchingname changed to rel1.matchingname
+        System.out.println("List of rel1 columns w/ matchingname changed to rel1.matchingname");
         String newColRel1 = "rel1." + matchingname;
         List<String> newrel1attrs = rel1.getAttrs(); // Ex: id, name -> rel1.ad, name
         for (int i = 0; i < newrel1attrs.size(); i++) {
@@ -368,6 +370,7 @@ public class RAImpl implements RA {
         }
         Relation newrel1 = rename(rel1, r1attrs, newrel1attrs); // Table with renamed columns
         // List of rel2 columns w/ matchingname changed to rel2.matchingname
+        System.out.println("List of rel2 columns w/ matchingname changed to rel2.matchingname");
         String newColRel2 = "rel2." + matchingname;
         List<String> newrel2attrs = rel2.getAttrs();
         for (int i = 0; i < newrel2attrs.size(); i++) {
@@ -378,16 +381,19 @@ public class RAImpl implements RA {
         Relation newrel2 = rename(rel2, r2attrs, newrel2attrs); // Table with renamed columns
 
         //cartesian product w/ renamed tables
+        System.out.println("Made cartesian product w/ renamed tables");
         Relation cartesianProd = cartesianProduct(newrel1, newrel2);
 
         //Select rows where newColRel1 == newColRel2
+        System.out.println("New table w/ Select rows where newColRel1 == newColRel2");
         Relation sameMatch = select(cartesianProd, row -> {
             int indexRel1 = cartesianProd.getAttrIndex(newColRel1); //index of column of rel1 renamed matchingname
             int indexRel2 = cartesianProd.getAttrIndex(newColRel2); //index of column of rel2 renamed matchingname
-            String rowValueRel1 = row.get(indexRel1).getAsString();
-            String rowValueRel2 = row.get(indexRel2).getAsString();
-            return rowValueRel1.equals(rowValueRel2);
+            //String rowValueRel1 = row.get(indexRel1).getAsString();
+            //String rowValueRel2 = row.get(indexRel2).getAsString();
+            return (row.get(indexRel1)).equals(row.get(indexRel2));
         });
+        System.out.println("SELECT worked");
 
         //Project all the columns except for rel2 renamed matchingname
         // - ex: rel1.id, name, rel2.id, grade -> rel1.id, name, grade 
@@ -406,7 +412,17 @@ public class RAImpl implements RA {
                 matchattrs.set(i, matchingname); //rename the column name to matchingname
             }
         }
-        return rename(removeNewColRel2, matchattrs, finalattrs);
+
+        for (int i = 0; i < matchattrs.size(); i++) {
+            System.out.print(matchattrs.get(i) + ", ");
+        }
+        System.out.println();
+        for (int i = 0; i < finalattrs.size(); i++) {
+            System.out.print(finalattrs.get(i) + ", ");
+        }
+        System.out.println();
+
+        return rename(removeNewColRel2, finalattrs, matchattrs);
     }
 
     @Override
