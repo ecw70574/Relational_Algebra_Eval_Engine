@@ -402,12 +402,12 @@ public class RAImpl implements RA {
 
         //Select rows where newColRel1 == newColRel2
         System.out.println("New table w/ Select rows where newColRel1 == newColRel2");
-        Relation filtered_relation = select(cartesianProd, row -> {
+        Relation filtered_relation = select(cartesian, row -> {
             for (int k = 0; k < matchingnames.size(); k++){
                 String newColRel1 = "rel1." + matchingnames.get(k);
                 String newColRel2 = "rel2." + matchingnames.get(k);
-                int indexRel1 = cartesianProd.getAttrIndex(newColRel1); //index of column of rel1 renamed matchingname
-                int indexRel2 = cartesianProd.getAttrIndex(newColRel2); //index of column of rel2 renamed matchingname
+                int indexRel1 = cartesian.getAttrIndex(newColRel1); //index of column of rel1 renamed matchingname
+                int indexRel2 = cartesian.getAttrIndex(newColRel2); //index of column of rel2 renamed matchingname
                 return (row.get(indexRel1)).equals(row.get(indexRel2));
             }
         });

@@ -10,6 +10,7 @@ import java.util.List;
 
 import uga.csx370.mydb.Relation;
 import uga.csx370.mydb.RelationBuilder;
+import uga.csx370.mydb.RA;
 import uga.csx370.mydb.Type;
 
 public class Driver {
