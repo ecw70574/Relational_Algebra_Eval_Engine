@@ -437,14 +437,13 @@ public class RAImpl implements RA {
         Relation removeNewColRel2 = project(filtered_relation, matchattrs);
 
         //rename the rel2 renamed matchingname to matchingname
-        List<String> finalattrs = removeNewColRel2.getAttrs();
+        List<String> finalattrs = new ArrayList<>();
         for (int i = 0; i < matchingnames.size(); i++){
             String renameTo = "rel1." + matchingnames.get(i);
-            int idx = finalattrs.indexOf(renameTo);
-            finalattrs.set(idx, renameTo);
+            finalattrs.add(renameTo);
         }
 
-        return rename(removeNewColRel2, finalattrs, matchattrs);
+        return rename(removeNewColRel2, finalattrs, matchingnames);
     }
 
     @Override
