@@ -160,28 +160,7 @@ public class Driver {
 
 
 //Priya
-//Find the IDs, names, and course titles of students who received an A+ in 2010
 
-RAImpl ra = new RAImpl();
-//1 - select year = 2010
-int yearIdx = takes.getAttrIndex("year");
-Relation T1 = ra.select(takes, row ->
-    ((int) row.get(yearIdx).getAsDouble()) == 2010   // year column is DOUBLE
-);
-//2 - grade = A
-int gradeIdx = T1.getAttrIndex("grade");
-Relation T2 = ra.select(T1, row ->
-    row.get(gradeIdx).getAsString().equals("A+")
-);
-//3 project for ID and coursename from T2 table
-Relation T3 = ra.project(T2, List.of("ID", "course_id"));
-//4 - natural join t3 and student
-Relation T4 = ra.join(T3, student);
-//5 - natural join t4 and course
-Relation T5 = ra.join(T4, course);
-//6 - project id, name title
-Relation FinalResult = ra.project(T5, List.of("ID", "name", "title"));
-FinalResult.print();
 
 
 

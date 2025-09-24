@@ -161,7 +161,6 @@ public class Driver {
 
 //Priya
 //Find the IDs, names, and course titles of students who received an A+ in 2010
-
 RAImpl ra = new RAImpl();
 //1 - select year = 2010
 int yearIdx = takes.getAttrIndex("year");
