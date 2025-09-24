@@ -203,7 +203,7 @@ FinalResult.print();
         // now naming is consistent so joins/intersections are valid
 
         // part 2 of query: get IDs of instructors who taught in 2025
-        Relation teach_filtered = ella_query.select(teaches, row -> {
+        Relation teach_2025 = ella_query.select(teaches, row -> {
                 int year = (int) row.get(4).getAsDouble(); // safer integer comparison
                 return year == 2023 || year == 2024;
         });
