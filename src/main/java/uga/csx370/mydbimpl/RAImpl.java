@@ -360,7 +360,7 @@ public class RAImpl implements RA {
                         matchfound = true;
                         matchingname = r1attrs.get(i);
                         matchingnames.add(matchingname);
-                        System.out.println("matchingname: " + matchingname);
+                        //System.out.println("matchingname: " + matchingname);
                         // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
                         // rel2v2 = rename(rel2, r2attrs.get(j), "rel2." + r2attrs.get(j));
                     } else {
@@ -411,11 +411,11 @@ public class RAImpl implements RA {
         Relation newrel2 = rename(rel2, r2attrs, newrel2Attrs); // Table with renamed columns
 
         // cartesian of newrel1 and newrel2 (all pairs are renamed at once)
-        System.out.println("Made cartesian product w/ renamed tables");
+        //System.out.println("Made cartesian product w/ renamed tables");
         Relation cartesian = cartesianProduct(newrel1, newrel2);
 
         //Select rows where newColRel1 == newColRel2
-        System.out.println("New table w/ Select rows where newColRel1 == newColRel2");
+        //System.out.println("New table w/ Select rows where newColRel1 == newColRel2");
         Relation filtered_relation = select(cartesian, row -> {
             for (int k = 0; k < matchingnames.size(); k++){
                 String newColRel1 = "rel1." + matchingnames.get(k);

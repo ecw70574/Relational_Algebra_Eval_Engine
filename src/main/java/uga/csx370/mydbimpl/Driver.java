@@ -209,17 +209,37 @@ FinalResult.print();
         Relation final_cols_only = ella_query.project(final_instr_info, List.of("ID", "name"));
         System.out.println("Names and IDs of instructors who advise John or Jack, & also taught in 2025");
         final_cols_only.print();
-//Mariah 
+        
+        //Mariah 
+        System.out.println("Departments that have an instructor who taught in 2008 or offered a course with the title 'The Monkeys'");
+        RA mariah_query = new RAImpl();
 
-        Relation year_2020 = test.select(teaches, row -> {
-               List<Double> year = row.get(4);
-               return year.equals("2020");
+        //Part 1. Find the departments with instructors who taught in 2008
+        //Select teachers who taught in 2008
+        Relation year_2008 = mariah_query.select(teaches, row -> {
+                double year_values = row.get(4).getAsDouble();
+                return year_values == 2008;
         });
-        year_2020.print();
+        //Project just thier ID
+        Relation instr_id = mariah_query.project(year_2008, List.of("ID"));
+        //Natural join the instructor ID of professors who taught in 2008 with instructor table
+        Relation instr_2008 = mariah_query.join(instr_id, instructor);
+        //Select just the dept_name of teachers who taught in 2008
+        Relation dept_2008 = mariah_query.project(instr_2008, List.of("dept_name"));
 
-
-
-
+        //Part 2. Find the departments where 'The Monkeys' is taught 
+        //Select courses with the name 'The Monkeys'
+        Relation monkeyCourse = mariah_query.select(course, row -> {
+                int monkey_index = course.getAttrIndex("title");
+                String monkey = row.get(monkey_index).toString();
+                return monkey.equals("The Monkeys");
+        });
+        //Project just the dept_name with the course "The Monkeys"
+        Relation dept_monkey = mariah_query.project(monkeyCourse, List.of("dept_name"));
+        
+        //Part 3. Combine results 
+        Relation monkeyOr2008 = mariah_query.union(dept_2008, dept_monkey);
+        monkeyOr2008.print();
 
 
 /* 
