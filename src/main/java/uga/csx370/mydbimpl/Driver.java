@@ -8,6 +8,7 @@ package uga.csx370.mydbimpl;
 
 import java.util.List;
 
+import uga.csx370.mydb.RA;
 import uga.csx370.mydb.Relation;
 import uga.csx370.mydb.RelationBuilder;
 import uga.csx370.mydb.Type;
@@ -78,7 +79,7 @@ public class Driver {
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING, Type.STRING, Type.STRING))
                 .build();
         section.loadData("src/uni_in_class_exports/section_export.csv");
-        
+
         //Student Table
         System.out.println("This is the Original Student Table");
         Relation student = new RelationBuilder().attributeNames(List.of("ID", "name","dept_name","tot_cred"))
@@ -114,11 +115,44 @@ public class Driver {
 //Write Quereies Here
 
 
-//Amy
-
-
-
-
+        //Amy
+        /* Course ID's of fall or spring courses with time slot C.
+        * PROJECT[course_id](
+        *      SELECT[semester == “Fall” AND time_slot_id == "C"](Section)
+        * ) 
+        * UNION
+        * PROJECT[course_id](
+        *      SELECT[semester == “Spring” AND time_slot_id == "M"](Section)
+        * )
+        */
+        RA testAmy = new RAImpl();
+        // SELECT[semester == “Fall” AND time_slot_id == "C"](Section)
+        Relation fall_slot_C_select = testAmy.select(section, row -> {
+                //
+                int semester_index = section.getAttrIndex("semester");
+                int time_slot_id_index = section.getAttrIndex("time_slot_id");
+                String semester = row.get(semester_index).toString();
+                String time_slot_id = row.get(time_slot_id_index).toString();
+                return semester.equals("Fall") && (time_slot_id.equals("C"));
+        });
+        // PROJECT[course_id](fall_slot_C_select)
+        Relation fall_slot_C_proj_courseID = testAmy.project(fall_slot_C_select, List.of("course_id"));
+        // SELECT[semester == “Spring” AND time_slot_id == "M"](Section)
+        Relation spring_slot_C_select = testAmy.select(section, row -> {
+                //
+                int semester_index = section.getAttrIndex("semester");
+                int time_slot_id_index = section.getAttrIndex("time_slot_id");
+                String semester = row.get(semester_index).toString();
+                String time_slot_id = row.get(time_slot_id_index).toString();
+                return semester.equals("Spring") && (time_slot_id.equals("C"));
+        });
+        // PROJECT[course_id](spring_slot_C_select)
+        Relation spring_slot_C_proj_courseID = testAmy.project(spring_slot_C_select, List.of("course_id"));
+        // fall_slot_C_proj_courseID UNION spring_slot_C_proj_courseID
+        Relation spring_fall_slot_C_courseID = testAmy.union(fall_slot_C_proj_courseID, spring_slot_C_proj_courseID);
+        // rename coluimn name: Course ID's Fall/Spring Slot C
+        Relation spring_fall_slot_C_courseID_rename = testAmy.rename(spring_fall_slot_C_courseID, List.of("course_id"), List.of("Course ID's Fall/Spring Slot C"));
+        spring_fall_slot_C_courseID_rename.print(); //print resulting table
 //Rosie
 
 
