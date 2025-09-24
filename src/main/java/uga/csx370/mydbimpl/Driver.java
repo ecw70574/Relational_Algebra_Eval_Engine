@@ -74,7 +74,7 @@ public class Driver {
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING, Type.STRING, Type.STRING))
                 .build();
         section.loadData("src/uni_in_class_exports/section_export.csv");
-        
+
         //Student Table
         Relation student = new RelationBuilder().attributeNames(List.of("ID", "name","dept_name","tot_cred"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
@@ -106,11 +106,44 @@ public class Driver {
 //Write Quereies Here
 
 
-//Amy
-
-
-
-
+        //Amy
+        /* Course ID's of fall or spring courses with time slot C.
+        * PROJECT[course_id](
+        *      SELECT[semester == “Fall” AND time_slot_id == "C"](Section)
+        * ) 
+        * UNION
+        * PROJECT[course_id](
+        *      SELECT[semester == “Spring” AND time_slot_id == "M"](Section)
+        * )
+        */
+        RA testAmy = new RAImpl();
+        // SELECT[semester == “Fall” AND time_slot_id == "C"](Section)
+        Relation fall_slot_C_select = testAmy.select(section, row -> {
+                //
+                int semester_index = section.getAttrIndex("semester");
+                int time_slot_id_index = section.getAttrIndex("time_slot_id");
+                String semester = row.get(semester_index).toString();
+                String time_slot_id = row.get(time_slot_id_index).toString();
+                return semester.equals("Fall") && (time_slot_id.equals("C"));
+        });
+        // PROJECT[course_id](fall_slot_C_select)
+        Relation fall_slot_C_proj_courseID = testAmy.project(fall_slot_C_select, List.of("course_id"));
+        // SELECT[semester == “Spring” AND time_slot_id == "M"](Section)
+        Relation spring_slot_C_select = testAmy.select(section, row -> {
+                //
+                int semester_index = section.getAttrIndex("semester");
+                int time_slot_id_index = section.getAttrIndex("time_slot_id");
+                String semester = row.get(semester_index).toString();
+                String time_slot_id = row.get(time_slot_id_index).toString();
+                return semester.equals("Spring") && (time_slot_id.equals("C"));
+        });
+        // PROJECT[course_id](spring_slot_C_select)
+        Relation spring_slot_C_proj_courseID = testAmy.project(spring_slot_C_select, List.of("course_id"));
+        // fall_slot_C_proj_courseID UNION spring_slot_C_proj_courseID
+        Relation spring_fall_slot_C_courseID = testAmy.union(fall_slot_C_proj_courseID, spring_slot_C_proj_courseID);
+        // rename coluimn name: Course ID's Fall/Spring Slot C
+        Relation spring_fall_slot_C_courseID_rename = testAmy.rename(spring_fall_slot_C_courseID, List.of("course_id"), List.of("Course ID's Fall/Spring Slot C"));
+        spring_fall_slot_C_courseID_rename.print(); //print resulting table
 //Rosie
 
 
@@ -118,16 +151,65 @@ public class Driver {
 
 
 //Priya
+//Find the IDs, names, and course titles of students who received an A+ in 2010
+
+RAImpl ra = new RAImpl();
+//1 - select year = 2010
+int yearIdx = takes.getAttrIndex("year");
+Relation T1 = ra.select(takes, row ->
+    ((int) row.get(yearIdx).getAsDouble()) == 2010   // year column is DOUBLE
+);
+//2 - grade = A
+int gradeIdx = T1.getAttrIndex("grade");
+Relation T2 = ra.select(T1, row ->
+    row.get(gradeIdx).getAsString().equals("A+")
+);
+//3 project for ID and coursename from T2 table
+Relation T3 = ra.project(T2, List.of("ID", "course_id"));
+//4 - natural join t3 and student
+Relation T4 = ra.join(T3, student);
+//5 - natural join t4 and course
+Relation T5 = ra.join(T4, course);
+//6 - project id, name title
+Relation FinalResult = ra.project(T5, List.of("ID", "name", "title"));
+FinalResult.print();
 
 
 
 //Ella
+// Names and IDs of instructors who advise John or Jack, & also taught in 2025
+        RA ella_query = new RAImpl();
+        // part 1 of query: get IDs of advisors for students named Jack or John
+        Relation JackorJohn = ella_query.select(student, row -> {
+                        String row_value = row.get(1).getAsString(); //row values for student name
+                        return row_value.equals("Jack") || row_value.equals("John"); //equal "Jack or John"
+                });
+        Relation stud_ids_only = ella_query.project(JackorJohn,List.of("ID"));
 
+        Relation filtered_advisors = ella_query.join(stud_ids_only, advisor, row -> {
+                int idx1 = stud_ids_only.getAttrIndex("ID");
+                int idx2 = advisor.getAttrIndex("s_ID");
+                return row.get(idx1).equals(row.get(idx2));
+        });
+        Relation advisor_ids = ella_query.project(filtered_advisors, List.of("i_ID"));
+        Relation rename_jj_advisors = ella_query.rename(advisor_ids, List.of("i_ID"), List.of("ID"));
+        // now naming is consistent so joins/intersections are valid
 
+        // part 2 of query: get IDs of instructors who taught in 2025
+        Relation teach_2025 = ella_query.select(teaches, row -> {
+                        double row_value_year = row.get(4).getAsDouble(); //row values for year
+                        return row_value_year == 2025; //equal "2025"
+                });
+        Relation ids_2025 = ella_query.project(teach_2025, List.of("ID"));
 
-        //Mariah 
-        System.out.println("Departments that have an instructor who taught in 2020 or offered a course with title 'English.'");
-        RA test = new RAImpl();
+        
+        Relation selected_instr_ids = ella_query.intersect(rename_jj_advisors, ids_2025);
+
+        Relation final_instr_info = ella_query.join(selected_instr_ids, instructor);
+        Relation final_cols_only = ella_query.project(final_instr_info, List.of("ID", "name"));
+        System.out.println("Names and IDs of instructors who advise John or Jack, & also taught in 2025");
+        final_cols_only.print();
+//Mariah 
 
         Relation year_2020 = test.select(teaches, row -> {
                List<Double> year = row.get(4);
