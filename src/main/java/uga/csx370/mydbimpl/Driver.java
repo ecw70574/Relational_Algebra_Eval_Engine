@@ -148,17 +148,18 @@ public class Driver {
                 int idx2 = advisor.getAttrIndex("s_ID");
                 return row.get(idx1).equals(row.get(idx2));
         });
-        System.out.println("Advisors for students with 100+ credits");
-        filtered_advisors.print();
+        
         Relation advisor_ids = ella_query.project(filtered_advisors, List.of("i_ID"));
         Relation rename_highcred_advisors = ella_query.rename(advisor_ids, List.of("i_ID"), List.of("ID"));
+        System.out.println("Advisors for students with 100+ credits");
+        filtered_advisors.print();
         // now naming is consistent so joins/intersections are valid
 
         // part 2 of query: get IDs of instructors who taught in 2025
-        Relation teach_2025 = ella_query.select(teaches, row -> {
-                        double row_value_year = row.get(4).getAsDouble(); //row values for year
-                        return row_value_year == 2024 || row_value_year == 2023; //equal 2024 or 2023
-                });
+        Relation teach_filtered = ella_query.select(teaches, row -> {
+                int year = (int) row.get(4).getAsDouble(); // safer integer comparison
+                return year == 2023 || year == 2024;
+        });
         Relation ids_2025 = ella_query.project(teach_2025, List.of("ID"));
         System.out.println("Professors who taught in 2024");
         ids_2025.print();
