@@ -8,9 +8,11 @@ package uga.csx370.mydbimpl;
 
 import java.util.List;
 
+import uga.csx370.mydb.RA;
 import uga.csx370.mydb.Relation;
 import uga.csx370.mydb.RelationBuilder;
 import uga.csx370.mydb.Type;
+
 
 
 
@@ -25,7 +27,6 @@ public class Driver {
         // CSV file.
 
         //Advisor Table
-        System.out.println("This is the origional advisor Table");
         Relation advisor = new RelationBuilder()
                 .attributeNames(List.of("s_ID", "i_ID"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
@@ -33,7 +34,6 @@ public class Driver {
         advisor.loadData("src/uni_in_class_exports/advisor_export.csv");
 
         //Classroom Table - mariah
-        System.out.println("This is the origional classroom Table");
         Relation classroom = new RelationBuilder()
         .attributeNames(List.of("building", "room_number","capacity"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
@@ -41,7 +41,6 @@ public class Driver {
         classroom.loadData("src/uni_in_class_exports/classroom_export.csv");
 
         //Course Table - mariah 
-        System.out.println("This is the origional course Table");
         Relation course = new RelationBuilder()
         .attributeNames(List.of("course_id", "title","dept_name","credits"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
@@ -49,7 +48,6 @@ public class Driver {
         course.loadData("src/uni_in_class_exports/course_export.csv");
 
         //Dept Table - mariah 
-        System.out.println("This is the origional department Table");
         Relation dept = new RelationBuilder()
         .attributeNames(List.of("dept_name", "building","budget"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE))
@@ -57,7 +55,6 @@ public class Driver {
         dept.loadData("src/uni_in_class_exports/dept_export.csv");
 
         //Instructor Table - priya
-        System.out.println("This is the origional Instructor Table");
         Relation instructor = new RelationBuilder()
         .attributeNames(List.of("ID", "name","dept_name", "salary"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
@@ -65,7 +62,6 @@ public class Driver {
         instructor.loadData("src/uni_in_class_exports/instructor_export.csv");
 
         //Prereq Table - priya
-        System.out.println("This is the Original Prereq Table");
         Relation prereq = new RelationBuilder()
         .attributeNames(List.of("course_id", "prereq_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
@@ -80,14 +76,12 @@ public class Driver {
         section.loadData("src/uni_in_class_exports/section_export.csv");
         
         //Student Table
-        System.out.println("This is the Original Student Table");
         Relation student = new RelationBuilder().attributeNames(List.of("ID", "name","dept_name","tot_cred"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING,Type.DOUBLE))
                 .build();
         student.loadData("src/uni_in_class_exports/student_export.csv");
 
         //Takes Table - Amy
-        System.out.println("This is the Original Takes Table");
         Relation takes = new RelationBuilder()
                 .attributeNames(List.of("ID", "course_id", "sec_id", "semester", "year", "grade"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE, Type.STRING))
@@ -95,7 +89,6 @@ public class Driver {
         takes.loadData("src/uni_in_class_exports/takes_export.csv");
 
         //Teaches Table - Amy
-        System.out.println("This is the Original Teaches Table");
         Relation teaches = new RelationBuilder()
                 .attributeNames(List.of("ID", "course_id", "sec_id", "semester", "year"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
@@ -103,7 +96,6 @@ public class Driver {
         teaches.loadData("src/uni_in_class_exports/teaches_export.csv");
 
         //Time Slot Table - Amy
-        System.out.println("This is the Original Time Slot Table");
         Relation Time_slot = new RelationBuilder()
                 .attributeNames(List.of("time_slot_id", "day", "start_hr", "start_min", "end_hr", "end_min"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.DOUBLE, Type.DOUBLE, Type.DOUBLE, Type.DOUBLE))
@@ -133,8 +125,15 @@ public class Driver {
 
 
 
-//Mariah 
+        //Mariah 
+        System.out.println("Departments that have an instructor who taught in 2020 or offered a course with title 'English.'");
+        RA test = new RAImpl();
 
+        Relation year_2020 = test.select(teaches, row -> {
+               List<Double> year = row.get(4);
+               return year.equals("2020");
+        });
+        year_2020.print();
 
 
 
