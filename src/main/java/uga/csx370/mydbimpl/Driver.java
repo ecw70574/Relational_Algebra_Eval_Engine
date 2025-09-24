@@ -245,7 +245,7 @@ FinalResult.print();
         //Part 3. Combine results 
         Relation monkeyOr2008 = mariah_query.union(dept_2008, dept_monkey);
         monkeyOr2008.print();
-        year_2020.print();
+        
 
 
 /* 

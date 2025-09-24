@@ -360,18 +360,15 @@ public class RAImpl implements RA {
                         matchfound = true;
                         matchingname = r1attrs.get(i);
                         matchingnames.add(matchingname);
-                        //System.out.println("matchingname: " + matchingname);
                         // rel1v2 = rename(rel1, r1attrs.get(i), "rel1." + r1attrs.get(i));
                         // rel2v2 = rename(rel2, r2attrs.get(j), "rel2." + r2attrs.get(j));
                     } else {
-                        // System.out.println("Common column name but types aren't compatible");
                         throw new IllegalArgumentException("Relation 1 and Relation 2 have Common column name but types aren't compatible");
                     } // if
                 } // if
             } // for
         }
         if (!matchfound){ // if no matching column pair found
-            // System.out.println("No common column names to join on");
             throw new IllegalArgumentException("Relation 1 and Relation 2 have no common column names to join on.");
         }
 
@@ -386,7 +383,6 @@ public class RAImpl implements RA {
         }
         /*
         // List of rel1 columns w/ matchingname changed to rel1.matchingname
-        System.out.println("List of rel1 columns w/ matchingname changed to rel1.matchingname");
         String newColRel1 = "rel1." + matchingname;
         List<String> newrel1attrs = rel1.getAttrs(); // Ex: id, name -> rel1.ad, name
         for (int i = 0; i < newrel1attrs.size(); i++) {
@@ -399,7 +395,6 @@ public class RAImpl implements RA {
         Relation newrel1 = rename(rel1, r1attrs, newrel1Attrs); // Table with renamed columns
         /*
         // List of rel2 columns w/ matchingname changed to rel2.matchingname
-        System.out.println("List of rel2 columns w/ matchingname changed to rel2.matchingname");
         String newColRel2 = "rel2." + matchingname;
         List<String> newrel2attrs = rel2.getAttrs();
         for (int i = 0; i < newrel2attrs.size(); i++) {
@@ -411,11 +406,9 @@ public class RAImpl implements RA {
         Relation newrel2 = rename(rel2, r2attrs, newrel2Attrs); // Table with renamed columns
 
         // cartesian of newrel1 and newrel2 (all pairs are renamed at once)
-        //System.out.println("Made cartesian product w/ renamed tables");
         Relation cartesian = cartesianProduct(newrel1, newrel2);
 
         //Select rows where newColRel1 == newColRel2
-        //System.out.println("New table w/ Select rows where newColRel1 == newColRel2");
         Relation filtered_relation = select(cartesian, row -> {
             for (int k = 0; k < matchingnames.size(); k++){
                 String newColRel1 = "rel1." + matchingnames.get(k);
