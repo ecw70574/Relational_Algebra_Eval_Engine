@@ -157,7 +157,7 @@ public class Driver {
         // part 2 of query: get IDs of instructors who taught in 2025
         Relation teach_2025 = ella_query.select(teaches, row -> {
                         double row_value_year = row.get(4).getAsDouble(); //row values for year
-                        return row_value_year == 2024 || row_value_year.equals("2024"); //equal "2024"
+                        return row_value_year == 2024 || row_value_year == 2023; //equal 2024 or 2023
                 });
         Relation ids_2025 = ella_query.project(teach_2025, List.of("ID"));
         System.out.println("Professors who taught in 2024");
