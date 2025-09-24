@@ -144,6 +144,8 @@ public class Driver {
                 int idx2 = advisor.getAttrIndex("s_ID");
                 return row.get(idx1).equals(row.get(idx2));
         });
+        System.out.println("Advisors for students named Jack or John");
+        filtered_advisors.print();
         Relation advisor_ids = ella_query.project(filtered_advisors, List.of("i_ID"));
         Relation rename_jj_advisors = ella_query.rename(advisor_ids, List.of("i_ID"), List.of("ID"));
         // now naming is consistent so joins/intersections are valid
@@ -154,7 +156,8 @@ public class Driver {
                         return row_value_year == 2025; //equal "2025"
                 });
         Relation ids_2025 = ella_query.project(teach_2025, List.of("ID"));
-
+        System.out.println("Professors who taught in 2025");
+        ids_2025.print();
         
         Relation selected_instr_ids = ella_query.intersect(rename_jj_advisors, ids_2025);
 
@@ -163,10 +166,6 @@ public class Driver {
         System.out.println("Names and IDs of instructors who advise John or Jack, & also taught in 2025");
         final_cols_only.print();
 //Mariah 
-
-
-
-
 
 
 
