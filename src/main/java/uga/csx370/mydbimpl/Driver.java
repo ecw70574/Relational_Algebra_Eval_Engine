@@ -144,7 +144,53 @@ public class Driver {
         // rename coluimn name: Course ID's Fall/Spring Slot C
         Relation spring_fall_slot_C_courseID_rename = testAmy.rename(spring_fall_slot_C_courseID, List.of("course_id"), List.of("Course ID's Fall/Spring Slot C"));
         spring_fall_slot_C_courseID_rename.print(); //print resulting table
-//Rosie
+
+        //Rosie
+        /* Names and IDs of students in the Statistics department with more than 110 creds who are advised by an 
+        * instructor with salary greater than 30K
+        * 
+        * PROJECT[s_ID, name](
+        *       SELECT[creds > 70 & dept_name = "Statistics"](
+        *           PROJECT[i_ID, s_ID] (    
+        *                 SELECT[salary > 30000]
+        *                       )
+        *                       JOIN ADVISOR
+        *                )
+        *               JOIN Student
+        *       )
+        */
+        System.out.print("Names and IDs of students in the Statistics Department with more than 110 credits advised by an instructor with slaray greater than 30K");
+        RA rosieQuery = new RAImpl();
+        // 1. instructors that make more than 30K 
+        Relation thirtyInstructors = rosieQuery.select(instructor, row -> {
+                double salary = row.get(3).getAsDouble();
+                return salary > 30000;
+        });
+        // project just IDs of those instructors
+        Relation high_instr_ids = rosieQuery.project(thirtyInstructors,List.of("ID"));
+        // join with advisor
+        Relation advisors_of_studs = rosieQuery.join(high_instr_ids, advisor, row -> {
+                int idx1 = high_instr_ids.getAttrIndex("ID");
+                int idx2 = advisor.getAttrIndex("i_ID");
+                return row.get(idx1).equals(row.get(idx2));
+        });
+        // get just the student ids that instructors advise
+        Relation advise_ids = rosieQuery.project(advisors_of_studs, List.of("s_ID"));
+        // join with sudent to get the students they advise
+        Relation advised_students = rosieQuery.join(advise_ids, student, row -> {
+                int idx1 = advise_ids.getAttrIndex("s_ID");
+                int idx2 = student.getAttrIndex("ID");
+                return row.get(idx1).equals(row.get(idx2));
+        });
+        // Statistics students with more than 110 credits 
+        Relation filtered_students = rosieQuery.select(advised_students, row -> {
+                String dept_name = row.get(3).getAsString();   // tot_cred
+                Double creds = row.get(4).getAsDouble();
+                return creds > 110 && dept_name.equalsIgnoreCase("Statistics");
+        });
+        // Students ids and names 
+        Relation student_final = rosieQuery.project(filtered_students, List.of("s_ID", "name"));
+        student_final.print();
 
 
 
