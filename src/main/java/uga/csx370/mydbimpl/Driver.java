@@ -180,33 +180,37 @@ FinalResult.print();
 // Names and IDs of instructors who advise John or Jack, & also taught in 2025
         RA ella_query = new RAImpl();
         // part 1 of query: get IDs of advisors for students named Jack or John
-        Relation JackorJohn = ella_query.select(student, row -> {
+        Relation high_credits = ella_query.select(student, row -> {
+                /*
                         String row_value = row.get(1).getAsString(); //row values for student name
                         return row_value.equals("Jack") || row_value.equals("John"); //equal "Jack or John"
+                */ 
+                double credits = row.get(3).getAsDouble();   // tot_cred
+                return credits > 100;
                 });
-        JackorJohn.print();
-        Relation stud_ids_only = ella_query.project(JackorJohn,List.of("ID"));
+        high_credits.print();
+        Relation stud_ids_only = ella_query.project(high_credits,List.of("ID"));
         Relation filtered_advisors = ella_query.join(stud_ids_only, advisor, row -> {
                 int idx1 = stud_ids_only.getAttrIndex("ID");
                 int idx2 = advisor.getAttrIndex("s_ID");
                 return row.get(idx1).equals(row.get(idx2));
         });
-        //System.out.println("Advisors for students named Jack or John");
-        //filtered_advisors.print();
+        System.out.println("Advisors for students with 100+ credits");
+        filtered_advisors.print();
         Relation advisor_ids = ella_query.project(filtered_advisors, List.of("i_ID"));
-        Relation rename_jj_advisors = ella_query.rename(advisor_ids, List.of("i_ID"), List.of("ID"));
+        Relation rename_highcred_advisors = ella_query.rename(advisor_ids, List.of("i_ID"), List.of("ID"));
         // now naming is consistent so joins/intersections are valid
 
         // part 2 of query: get IDs of instructors who taught in 2025
         Relation teach_2025 = ella_query.select(teaches, row -> {
                         double row_value_year = row.get(4).getAsDouble(); //row values for year
-                        return row_value_year == 2024; //equal "2024"
+                        return row_value_year == 2024 || row_value_year.equals("2024"); //equal "2024"
                 });
         Relation ids_2025 = ella_query.project(teach_2025, List.of("ID"));
-        System.out.println("Professors who taught in 2025");
+        System.out.println("Professors who taught in 2024");
         ids_2025.print();
         
-        Relation selected_instr_ids = ella_query.intersect(rename_jj_advisors, ids_2025);
+        Relation selected_instr_ids = ella_query.intersect(rename_highcred_advisors, ids_2025);
 
         Relation final_instr_info = ella_query.join(selected_instr_ids, instructor);
         Relation final_cols_only = ella_query.project(final_instr_info, List.of("ID", "name"));
