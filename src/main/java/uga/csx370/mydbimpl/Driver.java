@@ -137,15 +137,15 @@ public class Driver {
                         String row_value = row.get(1).getAsString(); //row values for student name
                         return row_value.equals("Jack") || row_value.equals("John"); //equal "Jack or John"
                 });
+        JackorJohn.print();
         Relation stud_ids_only = ella_query.project(JackorJohn,List.of("ID"));
-
         Relation filtered_advisors = ella_query.join(stud_ids_only, advisor, row -> {
                 int idx1 = stud_ids_only.getAttrIndex("ID");
                 int idx2 = advisor.getAttrIndex("s_ID");
                 return row.get(idx1).equals(row.get(idx2));
         });
-        System.out.println("Advisors for students named Jack or John");
-        filtered_advisors.print();
+        //System.out.println("Advisors for students named Jack or John");
+        //filtered_advisors.print();
         Relation advisor_ids = ella_query.project(filtered_advisors, List.of("i_ID"));
         Relation rename_jj_advisors = ella_query.rename(advisor_ids, List.of("i_ID"), List.of("ID"));
         // now naming is consistent so joins/intersections are valid
@@ -153,7 +153,7 @@ public class Driver {
         // part 2 of query: get IDs of instructors who taught in 2025
         Relation teach_2025 = ella_query.select(teaches, row -> {
                         double row_value_year = row.get(4).getAsDouble(); //row values for year
-                        return row_value_year == 2025; //equal "2025"
+                        return row_value_year == 2024; //equal "2024"
                 });
         Relation ids_2025 = ella_query.project(teach_2025, List.of("ID"));
         System.out.println("Professors who taught in 2025");
