@@ -130,14 +130,10 @@ public class Driver {
 
 
 //Ella
-// Names and IDs of instructors who advise John or Jack, & also taught in 2009 or 2010
+// Names and IDs of instructors who advise student with 100+ credits, & also taught in 2009 or 2010
         RA ella_query = new RAImpl();
         // part 1 of query: get IDs of advisors for students with 100+ credits
         Relation high_credits = ella_query.select(student, row -> {
-                /*
-                        String row_value = row.get(1).getAsString(); //row values for student name
-                        return row_value.equals("Jack") || row_value.equals("John"); //equal "Jack or John"
-                */ 
                 double credits = row.get(3).getAsDouble();   // tot_cred
                 return credits > 100;
                 });
@@ -149,8 +145,6 @@ public class Driver {
         });
         Relation advisor_ids = ella_query.project(filtered_advisors, List.of("i_ID"));
         Relation rename_highcred_advisors = ella_query.rename(advisor_ids, List.of("i_ID"), List.of("ID"));
-        System.out.println("Advisors for students with 100+ credits");
-        rename_highcred_advisors.print();
         // now naming is consistent so joins/intersections are valid
 
         // part 2 of query: get IDs of instructors who taught in 2025
@@ -159,14 +153,19 @@ public class Driver {
                 return year == 2009 || year == 2010;
         });
         Relation ids_2010_2009 = ella_query.project(teach_2010_2009, List.of("ID"));
-        System.out.println("Professors who taught in 2009 or 2010");
-        ids_2010_2009.print();
-        
         Relation selected_instr_ids = ella_query.intersect(rename_highcred_advisors, ids_2010_2009);
-
         Relation final_instr_info = ella_query.join(selected_instr_ids, instructor);
         Relation final_cols_only = ella_query.project(final_instr_info, List.of("ID", "name"));
-        System.out.println("Names and IDs of instructors who advise John or Jack, & also taught in 2025");
+        System.out.println("Names and IDs of instructors who advise at least 1 student with 100+ credits, & also taught in 2009 or 2010");
+        System.out.println("SQL equivalent of this query:");
+        System.out.println(
+        "SELECT DISTINCT i.ID, i.name \n" +
+        "FROM instructor i \n" +
+        "JOIN advisor a ON i.ID = a.i_ID \n" +
+        "JOIN student s ON s.ID = a.s_ID \n" +
+        "JOIN teaches t ON i.ID = t.ID \n" +
+        "WHERE s.tot_cred > 100 AND (t.year = 2009 OR t.year = 2010);"
+        );
         final_cols_only.print();
 //Mariah 
 
