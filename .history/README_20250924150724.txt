@@ -1,0 +1,37 @@
+Group Number - ugrd-5
+
+Project 1
+
+Team Members Names - Priya Sampat, Mariah Jaeck, Amy Huang, Ella Wileman, Rebekah McLatcher   
+
+Contributions:
+Priya
+- Implemented the intersect method
+- Helped edit, debug, and test both natural and theta joins
+- Wrote one query
+- Contributed extensive testing across multiple methods
+
+Ella
+- Implemented the cartesian product method
+- Started the theta join method
+- Worked with Rosie on union, select, project
+- Helped with specical case with natural join
+- Wrote one query
+
+Rosie
+- Implemented union, select, and project methods
+- Added deduplication logic to project
+- Helped add a special case for natural join on multiple columns (Amy wrote most of the core logic)
+- Wrote one query
+
+Amy
+- Implemented the difference method
+- Wrote core logic for the natural join
+- Conducted extensive testing
+- Wrote one query
+
+Mariah
+- Implemented the rename method
+- Assisted with theta join code and debugging
+- Helped create testers for multiple methods
+- Wrote one query
